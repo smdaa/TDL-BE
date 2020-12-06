@@ -83,5 +83,21 @@ let afficher_globale tds =
      match !i with
      |InfoVar (n,t,_,_) -> i:= InfoVar (n,t,d,b)
      | _ -> failwith "Appel modifier_adresse_info pas sur un InfoVar"
+  
+ let get_type info = 
+  match info_ast_to_info info with 
+  | InfoVar (_,t,_,_) -> t
+  | InfoFun (_, t, _) -> t
+  | InfoConst _ -> Type.Int
+
+let get_dep info =
+  match info_ast_to_info info with 
+  | InfoVar (_,_, d,_) -> d
+  | _ -> failwith "Appel get_addresse pas sur un InfoVar"
+
+let get_reg info =
+  match info_ast_to_info info with 
+  | InfoVar (_,_, _,b) -> b
+  | _ -> failwith "Appel get_reg pas sur un InfoVar"
     
    
