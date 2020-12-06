@@ -12,7 +12,7 @@ struct
 
 let rec analyse_placement_instruction i base reg =
   match i with 
-  | AstType.Declaration (_, info) ->
+  | AstType.Declaration (_, info) -> 
     begin
     match info_ast_to_info info with 
     | InfoVar _ -> 
