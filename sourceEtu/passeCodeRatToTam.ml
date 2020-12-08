@@ -81,11 +81,11 @@ let rec analyse_code_instruction i =
     "JUMP " ^ label_endif ^ "\n" ^
     label_else ^ "\n" ^
     (analyse_code_bloc e) ^
-    label_endif
+    label_endif ^ "\n"
   | TantQue (c, b) ->
     let label_debut = getEtiquette() in
     let label_fin = getEtiquette() in
-    label_debut ^
+    label_debut ^ "\n" ^
     (analyse_code_expression c) ^
     "JUMPIF (0) " ^ label_fin ^ "\n" ^
     (analyse_code_bloc b) ^
@@ -105,11 +105,12 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, li, e)) =
   | InfoFun(non, typeRet, typeParams) -> 
     let taille_variables_locales = List.fold_right (fun i ti -> (taille_variables_declarees i) + ti) li 0 in 
     let taille_return = getTaille typeRet in
-    let taille_parametres = List.fold_left (fun acc t -> acc + (getTaille t) ) 0 typeParams in
+    let taille_parametres = List.fold_right (fun t acc -> acc + (getTaille t) ) typeParams 0  in
+    let nli = String.concat "" (List.map analyse_code_instruction li) in
     non ^ "\n" ^
-    (analyse_code_bloc li) ^
+    nli ^
     (analyse_code_expression e) ^
-    "POP (" ^ (string_of_int taille_return) ^ ") " ^ (string_of_int taille_variables_locales) ^
+    "POP (" ^ (string_of_int taille_return) ^ ") " ^ (string_of_int taille_variables_locales) ^ "\n" ^
     "RETURN (" ^ (string_of_int taille_return) ^ " )" ^ (string_of_int taille_parametres) ^ "\n"
   | _ -> failwith "erreur interne"
 
