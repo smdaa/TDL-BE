@@ -15,9 +15,9 @@ let rec analyse_placement_instruction i base reg =
   | AstType.Declaration (_, info) -> 
     begin
     match info_ast_to_info info with 
-    | InfoVar _ -> 
+    | InfoVar(_, t, _, _) -> 
       modifier_adresse_info base reg info;
-      (getTaille (get_type info) + base)
+      (getTaille (t) + base)
     | _ -> failwith "erreur interne"
     end
   | AstType.Conditionnelle (_, t, e) ->
