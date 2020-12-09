@@ -35,6 +35,9 @@ open Ast.AstSyntax
 %token PLUS
 %token MULT
 %token INF
+%token AMV
+%token NULL 
+%token NEW
 %token EOF
 
 (* Type de l'attribut synthétisé des non-terminaux *)
@@ -47,6 +50,7 @@ open Ast.AstSyntax
 %type <(typ*string) list> dp
 %type <expression> e 
 %type <expression list> cp
+%type <affectable> a
 
 (* Type et définition de l'axiome *)
 %start <Ast.AstSyntax.programme> main
@@ -69,7 +73,7 @@ is :
 
 i :
 | t=typ n=ID EQUAL e1=e PV          {Declaration (t,n,e1)}
-| n=ID EQUAL e1=e PV                {Affectation (n,e1)}
+| n=a EQUAL e1=e PV                {Affectation (n,e1)}
 | CONST n=ID EQUAL e=ENTIER PV      {Constante (n,e)}
 | PRINT e1=e PV                     {Affichage (e1)}
 | IF exp=e li1=bloc ELSE li2=bloc   {Conditionnelle (exp,li1,li2)}
@@ -83,6 +87,7 @@ typ :
 | BOOL    {Bool}
 | INT     {Int}
 | RAT     {Rat}
+| t=typ MULT {Pointeur(t)}
 
 e : 
 | CALL n=ID PO lp=cp PF   {AppelFonction (n,lp)}
@@ -98,8 +103,16 @@ e :
 | PO e1=e EQUAL e2=e PF   {Binaire (Equ,e1,e2)}
 | PO e1=e INF e2=e PF     {Binaire (Inf,e1,e2)}
 | PO exp=e PF             {exp}
+| n=a                     {Affectable(n)}
+| NULL                    {NULL}
+| PO NEW t=typ PF         {NEW (t)}
+| AMV n=ID                {Adresse (n)}
 
 cp :
 |               {[]}
 | e1=e le=cp    {e1::le}
+
+a:
+| PO MULT n=a PF     {Valeur (n)}
+| n=ID               {Ident n}
 
