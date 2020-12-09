@@ -16,7 +16,7 @@ let rec analyse_code_expression e =
     begin
       match info_ast_to_info info with 
       | InfoFun (n, _, _) -> 
-        (List.fold_right (fun e acc -> acc ^ analyse_code_expression e) le "" ) ^ 
+        (List.fold_right (fun e acc -> (analyse_code_expression e) ^ acc) le "" ) ^ 
         "CALL (SB) " ^ n ^ "\n"
       | _ -> failwith "erreur interne"
     end
@@ -105,7 +105,7 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, li, e)) =
   | InfoFun(non, typeRet, typeParams) -> 
     let taille_variables_locales = List.fold_right (fun i ti -> (taille_variables_declarees i) + ti) li 0 in 
     let taille_return = getTaille typeRet in
-    let taille_parametres = List.fold_right (fun t acc -> acc + (getTaille t) ) typeParams 0  in
+    let taille_parametres = List.fold_right (fun i ti -> ti + (getTaille i) ) typeParams 0  in
     let nli = String.concat "" (List.map analyse_code_instruction li) in
     non ^ "\n" ^
     nli ^
@@ -115,10 +115,12 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, li, e)) =
   | _ -> failwith "erreur interne"
 
 let analyser (AstPlacement.Programme(fonctions, bloc)) = 
-  let lf = List.fold_left (fun acc f -> acc ^ analyse_code_fonction f ^ "\n") "" fonctions in
-  let b = "LABEL main\n" ^ 
-          (analyse_code_bloc bloc) ^ 
-          "HALT\n" in
-  getEntete () ^ lf ^ b
+  let lf = String.concat "" (List.map analyse_code_fonction fonctions) in
+  let b = (analyse_code_bloc bloc) in
+  getEntete () ^ 
+  lf ^ "\n" ^
+  "main\n" ^ 
+  b ^ "\n" ^
+  "HALT\n"
 
 end
