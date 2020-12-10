@@ -1,3 +1,4 @@
+(*
 (* Module de la passe de génération de code *)
 module PasseCodeRatToTam : Passe.Passe with type t1 = Ast.AstPlacement.programme and type t2 = string =
 struct
@@ -124,3 +125,4 @@ let analyser (AstPlacement.Programme(fonctions, bloc)) =
   "HALT\n"
 
 end
+*)

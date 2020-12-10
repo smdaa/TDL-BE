@@ -104,8 +104,8 @@ e :
 | PO e1=e INF e2=e PF     {Binaire (Inf,e1,e2)}
 | PO exp=e PF             {exp}
 | n=a                     {Affectable(n)}
-| NULL                    {NULL}
-| PO NEW t=typ PF         {NEW (t)}
+| NULL                    {Null}
+| PO NEW t=typ PF         {New (t)}
 | AMV n=ID                {Adresse (n)}
 
 cp :

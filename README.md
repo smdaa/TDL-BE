@@ -40,7 +40,32 @@
 | n=ID   {Ident n}
 ```
 ### Changes in **type.ml** :
-add typ Pointeur of typ 
+* add typ Pointeur of typ 
 ```
 type typ = Bool | Int | Rat | Undefined | Pointeur of typ
 ```
+									   ``
+### Changes in **AstSyntax** :
+* add type affectable
+```
+type affectable =
+  | Ident of string
+  | Valeur of affectable
+```
+* add to expression
+```
+type expression =
+  ....
+  | Affectable of affectable
+  | Null
+  | New of Type
+  | Adresse  of String
+```
+* add to instruction
+```
+type instruction =
+...
+| Affectation of affectable * expression
+...
+```
+* change printers accordinly

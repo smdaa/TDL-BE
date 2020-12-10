@@ -46,6 +46,10 @@ struct
 (* Opérateurs binaires de Rat *)
 type binaire = Plus | Mult | Equ | Inf
 
+type affectable =
+  | Ident of string
+  | Valeur of affectable
+
 (* Expressions de Rat *)
 type expression =
   (* Appel de fonction représenté par le nom de la fonction et la liste des paramètres réels *)
@@ -66,6 +70,10 @@ type expression =
   | Entier of int
   (* Opération binaire représentée par l'opérateur, l'opérande gauche et l'opérande droite *)
   | Binaire of binaire * expression * expression
+  | Affectable of affectable
+  | Null
+  | New of typ
+  | Adresse  of string
 
 (* Instructions de Rat *)
 type bloc = instruction list
@@ -73,7 +81,7 @@ and instruction =
   (* Déclaration de variable représentée par son type, son nom et l'expression d'initialisation *)
   | Declaration of typ * string * expression
   (* Affectation d'une variable représentée par son nom et la nouvelle valeur affectée *)
-  | Affectation of string * expression
+  | Affectation of affectable * expression
   (* Déclaration d'une constante représentée par son nom et sa valeur (entier) *)
   | Constante of string * int
   (* Affichage d'une expression *)
@@ -90,6 +98,8 @@ type fonction = Fonction of typ * string * (typ * string) list * instruction lis
 (* Structure d'un programme Rat *)
 (* liste de fonction - programme principal *)
 type programme = Programme of fonction list * bloc
+
+
 
 end
 
@@ -109,6 +119,11 @@ struct
     | Equ -> "= "
     | Inf -> "< "
 
+  let rec string_of_affectable a =
+    match a with 
+    | Valeur a -> "valeur de " ^ string_of_affectable a
+    | Ident n -> n ^ ""
+
   (* Conversion des expressions *)
   let rec string_of_expression e =
     match e with
@@ -121,12 +136,16 @@ struct
     | False -> "false "
     | Entier i -> (string_of_int i)^" "
     | Binaire (b,e1,e2) -> (string_of_expression e1)^(string_of_binaire b)^(string_of_expression e2)^" "
+    | Null -> "Null"
+    | New t -> "new " ^ (string_of_type t) ^ " "
+    | Affectable a -> (string_of_affectable a)^" "
+    | Adresse n -> "adress " ^ n ^ " "
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
     match i with
     | Declaration (t, n, e) -> "Declaration  : "^(string_of_type t)^" "^n^" = "^(string_of_expression e)^"\n"
-    | Affectation (n,e) ->  "Affectation  : "^n^" = "^(string_of_expression e)^"\n"
+    | Affectation (a,e) ->  "Affectation  : "^(string_of_affectable a)^" = "^(string_of_expression e)^"\n"
     | Constante (n,i) ->  "Constante  : "^n^" = "^(string_of_int i)^"\n"
     | Affichage e ->  "Affichage  : "^(string_of_expression e)^"\n"
     | Conditionnelle (c,t,e) ->  "Conditionnelle  : IF "^(string_of_expression c)^"\n"^
