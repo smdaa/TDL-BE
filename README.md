@@ -44,7 +44,6 @@
 ```
 type typ = Bool | Int | Rat | Undefined | Pointeur of typ
 ```
-									   ``
 ### Changes in **AstSyntax** :
 * add type affectable
 ```
