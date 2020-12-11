@@ -94,7 +94,6 @@ e :
 | CO e1=e SLASH e2=e CF   {Rationnel(e1,e2)}
 | NUM e1=e                {Numerateur e1}
 | DENOM e1=e              {Denominateur e1}
-| n=ID                    {Ident n}
 | TRUE                    {True}
 | FALSE                   {False}
 | e=ENTIER                {Entier e}

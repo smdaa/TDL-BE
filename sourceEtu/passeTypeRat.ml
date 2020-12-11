@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de typage *)
 module PasseTypeRat : Passe.Passe with type t1 = Ast.AstTds.programme and type t2 = Ast.AstType.programme =
 struct
@@ -11,6 +11,23 @@ struct
 
   type t1 = Ast.AstTds.programme
   type t2 = Ast.AstType.programme
+
+let rec analyse_type_affectable a =
+  match a with 
+  | AstTds.Ident info ->
+    begin
+      match info_to_info_ast info with 
+      | InfoVar (_, t, _, _) -> (t, Ident info)
+      | InfoConst _ -> (Int, Ident info)
+      | _ -> failwith "internal error"
+    end
+  | AstTds.Valeur a ->
+    begin
+      let (ta, na) = analyse_type_affectable a in
+      match ta with 
+      | Pointeur tp -> (tp, Valeur na)
+      | _ -> failwith "internal error"
+    end
 
 let rec analyse_type_expression e =
   match e with 
@@ -39,13 +56,6 @@ let rec analyse_type_expression e =
     let (te, ne) = analyse_type_expression e in 
     if (te = Rat) then (Int, Denominateur ne)
     else raise (TypeInattendu (te, Rat))
-  | AstTds.Ident info ->
-    begin
-      match info_ast_to_info info with 
-      | InfoVar (_, t, _, _) -> (t, Ident info)
-      | InfoConst _ -> (Int, Ident info)
-      | _ -> failwith "internal error"
-    end
   | AstTds.True -> (Bool, True)
   | AstTds.False -> (Bool, False)
   | AstTds.Entier i -> (Int, Entier i)
@@ -61,6 +71,12 @@ let rec analyse_type_expression e =
     | Bool, Equ, Bool -> (Bool, Binaire(EquBool, ne1, ne2))
     | Int, Inf, Int -> (Bool, Binaire(Inf, ne1, ne2))
     | _ -> raise(TypeBinaireInattendu(op,te1,te2))
+  | AstTds.Affectable a -> 
+    let (ta, na) = analyse_type_affectable a in
+    (ta, Affectable na)
+  | AstTds.Null -> (Pointeur(Undefined), Null)
+  | AstTds.New t -> (Pointeur(t), New (t))
+  | AstTds.Adresse a -> failwith "TODO"
 
 let rec analyse_type_instruction i = 
   match i with 
@@ -128,4 +144,4 @@ let analyser (AstTds.Programme (fonctions, prog)) =
   let b = analyse_type_bloc prog in
   Programme(lf,b)
 end
-*)
+

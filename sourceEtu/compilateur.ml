@@ -34,14 +34,14 @@ end
 
 (* Compilateur créant l'AST *)
 
+(*
 module CompilateurRat = Compilateur (PasseTdsNop) (PasseNop) (PasseNop) (PasseCodeNopNop)
+*)
 
 
 (* + passe de résolution des identifiants *)
-(*
 open PasseTdsRat
 module CompilateurRat = Compilateur (PasseTdsRat) (PasseTypeNop) (PasseNop) (PasseCodeNopNop) 
-*)
 
 (* + passe de typage *)
 (* 
