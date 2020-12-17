@@ -1,4 +1,4 @@
-
+(*
 (* Module de la passe de typage *)
 module PasseTypeRat : Passe.Passe with type t1 = Ast.AstTds.programme and type t2 = Ast.AstType.programme =
 struct
@@ -145,3 +145,4 @@ let analyser (AstTds.Programme (fonctions, prog)) =
   Programme(lf,b)
 end
 
+*)
