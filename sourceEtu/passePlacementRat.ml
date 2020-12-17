@@ -17,20 +17,18 @@ let rec analyse_placement_instruction i base reg =
     match info_ast_to_info info with 
     | InfoVar(_, t, _, _) -> 
       modifier_adresse_info base reg info;
-      (getTaille (t) + base)
+      getTaille t 
     | _ -> failwith "erreur interne"
     end
   | AstType.Conditionnelle (_, t, e) ->
     analyse_placement_bloc t base reg;
     analyse_placement_bloc e base reg;
-    base
-  | AstType.TantQue (_, b) -> analyse_placement_bloc b base reg; base
-  | _ -> base
+    0
+  | AstType.TantQue (_, b) -> analyse_placement_bloc b base reg; 0
+  | _ -> 0
 
 and analyse_placement_bloc li base reg = 
-  match li with 
-  | [] -> ()
-  | h::t -> let i = (analyse_placement_instruction h base reg) in (analyse_placement_bloc t i reg)
+  let _ = List.fold_left (fun t qt -> t + (analyse_placement_instruction qt t reg)) base li in ()
 
 let analyse_placement_parametre info base =
   match info_ast_to_info info with
