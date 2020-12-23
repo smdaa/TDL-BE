@@ -19,19 +19,12 @@ let rec analyse_code_expression e =
       | InfoFun (n, _, _) -> 
         (List.fold_right (fun e acc -> (analyse_code_expression e) ^ acc) le "" ) ^ 
         "CALL (SB) " ^ n ^ "\n"
-      | _ -> failwith "erreur interne"
+      | _ -> failwith "internal error"
     end
   | Rationnel (e1, e2) -> (analyse_code_expression e1) ^
                           (analyse_code_expression e2)
   | Numerateur e1 -> (analyse_code_expression e1) ^ "POP (0) 1\n"
   | Denominateur e1 -> (analyse_code_expression e1) ^ "POP (1) 1\n"
-  | Ident info ->
-    begin
-      match info_ast_to_info info with 
-      | InfoVar(_, t, dep, reg) -> "LOAD (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n"
-      | InfoConst (_, i) -> "LOADL " ^ (string_of_int i) ^ "\n"
-      | _ -> failwith "erreur interne"
-    end
   | True -> "LOADL 1\n"
   | False -> "LOADL 0\n"
   | Entier i -> "LOADL " ^(string_of_int i) ^ "\n"
@@ -48,6 +41,18 @@ let rec analyse_code_expression e =
       | EquBool -> "SUBR BEq\n"
       | Inf -> "SUBR ILss\n"
     end
+  | Null  -> "SUBR Mvoid\n"
+  | New t -> "LOADL " ^
+              (string_of_int (getTaille t)) ^ "\n"
+              "SUBR Malloc\n"
+  | Adresse info ->
+    begin
+      match info_ast_to_info info with 
+      | InfoVar(_, _, dep, reg) -> "LOADA " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n"
+      | _ -> failwith "internal error" 
+    end
+  | Affectable _ -> failwith "TODO"
+              
 
 let rec analyse_code_instruction i =
   match i with 

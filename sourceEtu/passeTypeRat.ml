@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de typage *)
 module PasseTypeRat : Passe.Passe with type t1 = Ast.AstTds.programme and type t2 = Ast.AstType.programme =
 struct
@@ -16,16 +16,15 @@ let rec analyse_type_affectable a =
   match a with 
   | AstTds.Ident info ->
     begin
-      match info_to_info_ast info with 
+      match info_ast_to_info info with 
       | InfoVar (_, t, _, _) -> (t, Ident info)
       | InfoConst _ -> (Int, Ident info)
       | _ -> failwith "internal error"
     end
   | AstTds.Valeur a ->
     begin
-      let (ta, na) = analyse_type_affectable a in
-      match ta with 
-      | Pointeur tp -> (tp, Valeur na)
+      match (analyse_type_affectable a) with 
+      | (Pointeur tp, na) -> (tp, Valeur na)
       | _ -> failwith "internal error"
     end
 
@@ -62,6 +61,7 @@ let rec analyse_type_expression e =
   | AstTds.Binaire (op, e1, e2) ->
     let (te1, ne1) = analyse_type_expression e1 in
     let (te2, ne2) = analyse_type_expression e2 in
+    begin
     match te1,op,te2 with 
     | Int, Plus, Int -> (Int, Binaire(PlusInt, ne1, ne2))
     | Rat, Plus, Rat -> (Rat, Binaire(PlusRat, ne1, ne2))
@@ -71,12 +71,18 @@ let rec analyse_type_expression e =
     | Bool, Equ, Bool -> (Bool, Binaire(EquBool, ne1, ne2))
     | Int, Inf, Int -> (Bool, Binaire(Inf, ne1, ne2))
     | _ -> raise(TypeBinaireInattendu(op,te1,te2))
+    end
   | AstTds.Affectable a -> 
     let (ta, na) = analyse_type_affectable a in
     (ta, Affectable na)
   | AstTds.Null -> (Pointeur(Undefined), Null)
   | AstTds.New t -> (Pointeur(t), New (t))
-  | AstTds.Adresse a -> failwith "TODO"
+  | AstTds.Adresse a -> 
+    begin
+      match info_ast_to_info a with
+      | InfoVar(_,t,_,_) -> (Pointeur(t), Adresse a)
+      | _ -> failwith "internal error"
+    end
 
 let rec analyse_type_instruction i = 
   match i with 
@@ -88,16 +94,13 @@ let rec analyse_type_instruction i =
         Declaration (ne, info)
       end
     else raise (TypeInattendu (te, t))
-  | AstTds.Affectation (e, info) ->
+  | AstTds.Affectation (a, e) ->
     let (te, ne) = analyse_type_expression e in
-    begin
-      match info_ast_to_info info with 
-      | InfoVar (_, t, _, _) -> 
-        if (est_compatible t te) then 
-          Affectation(ne, info)
-        else raise (TypeInattendu (te, t))
-      | _ -> failwith "internal error"
-    end
+    let (ta, na) = analyse_type_affectable a in
+    if est_compatible te ta then
+      Affectation (na, ne)
+    else
+      raise (TypeInattendu (te, ta))
   | AstTds.Affichage e ->
     let (te, ne) = analyse_type_expression e in
     begin
@@ -105,7 +108,7 @@ let rec analyse_type_instruction i =
       | Int -> AffichageInt ne
       | Rat -> AffichageRat ne
       | Bool -> AffichageBool ne
-      | Undefined -> failwith "internal error"
+      | _ -> failwith "internal error"
     end
   | AstTds.Conditionnelle (c, t, e) ->
     let (tc, nc) = analyse_type_expression c in
@@ -144,5 +147,3 @@ let analyser (AstTds.Programme (fonctions, prog)) =
   let b = analyse_type_bloc prog in
   Programme(lf,b)
 end
-
-*)
