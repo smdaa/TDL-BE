@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de génération de code *)
 module PasseCodeRatToTam : Passe.Passe with type t1 = Ast.AstPlacement.programme and type t2 = string =
 struct
@@ -10,6 +10,37 @@ struct
 
   type t1 = Ast.AstPlacement.programme
   type t2 = string
+
+(* b = false -> LOAD, b = true -> STORE *)
+let rec analyse_code_affectable a b =
+  let rec aux a =
+    match a with 
+    | Valeur a1 -> aux a1
+    | Ident info -> 
+      begin
+        match info_ast_to_info info with 
+        | InfoVar(_, t, _, _) -> 
+          begin 
+            match t with 
+            | Pointeur t1 ->  getTaille t1 
+            | _ -> failwith "internal error"
+          end
+        | _ -> failwith "internal error"
+      end
+  in 
+  match a with 
+  | Ident info ->
+    begin
+       match info_ast_to_info info with 
+       | InfoVar(_, t, dep, reg) -> if b then ("STORE (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n") 
+                                    else ("LOAD (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n")
+       | InfoConst (_, i) -> if not b then "LOADL " ^ (string_of_int i) ^ "\n"
+                            else failwith "erreur interne"
+       | _ -> failwith "erreur interne"
+    end
+  | Valeur a1 -> if b then (analyse_code_affectable a1 false) ^ "STOREI (" ^ (string_of_int (aux a1)) ^ ")\n"
+                 else (analyse_code_affectable a1 b) ^ "LOADI (" ^ (string_of_int (aux a1)) ^ ")\n"
+
 
 let rec analyse_code_expression e =
   match e with 
@@ -41,17 +72,17 @@ let rec analyse_code_expression e =
       | EquBool -> "SUBR BEq\n"
       | Inf -> "SUBR ILss\n"
     end
-  | Null  -> "SUBR Mvoid\n"
-  | New t -> "LOADL " ^
-              (string_of_int (getTaille t)) ^ "\n"
-              "SUBR Malloc\n"
+  | Null  -> "SUBR MVoid\n"
+  | New t -> "LOADL " ^ (string_of_int (getTaille t)) ^ "\n" ^
+              "SUBR MAlloc\n"
   | Adresse info ->
     begin
       match info_ast_to_info info with 
-      | InfoVar(_, _, dep, reg) -> "LOADA " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n"
+      | InfoVar(_, _, dep, reg) -> "LOADA " ^ (string_of_int dep) ^ " [" ^ reg ^ "]\n"
       | _ -> failwith "internal error" 
     end
-  | Affectable _ -> failwith "TODO"
+  | Affectable a -> (analyse_code_affectable a false)
+
               
 
 let rec analyse_code_instruction i =
@@ -66,15 +97,9 @@ let rec analyse_code_instruction i =
         "STORE (" ^ taille ^") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n"
       | _ -> failwith "erreur interne"
     end
-  | Affectation (e, info) ->
-    begin 
-      match info_ast_to_info info with 
-      | InfoVar (_, t, dep, reg) -> 
-        let taille = string_of_int (getTaille t) in
-        (analyse_code_expression e) ^
-        "STORE (" ^ taille ^") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n"
-      | _ -> failwith "erreur interne"
-    end
+  | Affectation (a, e) ->
+    (analyse_code_expression e) ^
+    (analyse_code_affectable a true)
   | AffichageInt(e) -> (analyse_code_expression e) ^ "SUBR IOut\n"
   | AffichageBool(e) -> (analyse_code_expression e) ^ "SUBR BOut\n"
   | AffichageRat(e) -> (analyse_code_expression e) ^ "CALL (SB) ROut\n"
@@ -130,4 +155,4 @@ let analyser (AstPlacement.Programme(fonctions, bloc)) =
   "HALT\n"
 
 end
-*)
+
