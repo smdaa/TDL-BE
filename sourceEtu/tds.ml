@@ -5,7 +5,7 @@ open Type
 type info =
   | InfoConst of string * int
   | InfoVar of string * typ * int * string
-  | InfoFun of string * typ * typ list
+  | InfoFun of string * typ * (typ list) list
 
 (* Données stockées dans la tds  et dans les AST : pointeur sur une information *)
 type info_ast = info ref  
@@ -49,8 +49,7 @@ let string_of_info info =
   match info with
   | InfoConst (n,value) -> "Constante "^n^" : "^(string_of_int value)
   | InfoVar (n,t,dep,base) -> "Variable "^n^" : "^(string_of_type t)^" "^(string_of_int dep)^"["^base^"]"
-  | InfoFun (n,t,tp) -> "Fonction "^n^" : "^(List.fold_right (fun elt tq -> if tq = "" then (string_of_type elt) else (string_of_type elt)^" * "^tq) tp "" )^
-                      " -> "^(string_of_type t)
+  | InfoFun (_,_,_) -> "TODO"
 
 
 let afficher_locale tds =
@@ -76,7 +75,7 @@ let afficher_globale tds =
  
  let modifier_type_fonction_info t tp i =
        match !i with
-       |InfoFun(n,_,_) -> i:= InfoFun(n,t,tp)
+       |InfoFun(n,_,tpl) -> i:= InfoFun(n,t,tp::tpl)
        | _ -> failwith "Appel modifier_type_fonction_info pas sur un InfoFun"
  
  let modifier_adresse_info d b i =

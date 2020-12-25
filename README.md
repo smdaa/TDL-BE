@@ -39,7 +39,15 @@
 ```
 | n=ID   {Ident n}
 ```
-
+# La surcharge de fonctions
+### Changes in **lexer.ml** :
+None
+### Changes in **parser.mly** :
+None
+### Changes in **tds.ml** :
+```
+| InfoFun of string * typ * (typ list) list
+```
 
 
 
