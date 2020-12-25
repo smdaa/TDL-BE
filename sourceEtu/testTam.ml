@@ -115,7 +115,10 @@ let%expect_test "factrec" =
   runtam "../../fichiersRat/src-rat-tam-test/factrec.rat";
   [%expect{| 120 |}]
 
-let%expect_test "pointeur" =
+let%expect_test "pointeur1" =
   runtam "../../fichiersRat/src-rat-tam-test/pointeur1.rat";
   [%expect{| 3 |}]
 
+let%expect_test "pointeur1" =
+  runtam "../../fichiersRat/src-rat-tam-test/pointeur2.rat";
+  [%expect{| 5 |}]

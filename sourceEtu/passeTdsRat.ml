@@ -120,7 +120,7 @@ let rec analyse_tds_instruction tds i =
             raise (DoubleDeclaration n)
       end
   | AstSyntax.Affectation (a,e) ->
-    (* Dans affectation donc affectable en ´ecriture *)
+    (* Dans affectation donc affectable en ecriture *)
     Affectation ((analyse_tds_affectable tds a true), (analyse_tds_expression tds e) )
   | AstSyntax.Constante (n,v) -> 
       begin
