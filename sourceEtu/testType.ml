@@ -462,6 +462,30 @@ let%test_unit "test"=
 let%test_unit "test2"= 
   let _ = compiler "../../fichiersRat/src-rat-type-test/test2.rat" in ()
 
+let%test_unit "testpointeur1" = 
+  let _ = compiler "../../fichiersRat/src-rat-type-test/testPointeur1.rat" in ()
+
+let%test_unit "testpointeur2" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testPointeur2.rat" 
+    in raise ErreurNonDetectee
+  with
+  | TypeInattendu(Pointeur Int, Pointeur Rat) -> ()
+
+let%test_unit "testpointeur3" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testPointeur3.rat" 
+    in raise ErreurNonDetectee
+  with
+  | TypeInattendu(Int, Rat) -> ()
+
+let%test_unit "testpointeur4" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testPointeur4.rat" 
+    in raise ErreurNonDetectee
+  with
+  | MauvaiseUtilisationIdentifiant("plus1") -> ()
+
 
 (* Fichiers de tests de la génération de code -> doivent passer le typage *)
 
@@ -524,4 +548,5 @@ let _ = compiler   "../../fichiersRat/src-rat-tam-test/testfuns.rat" in ()
 
 let%test_unit "code_complique" = 
 let _ = compiler   "../../fichiersRat/src-rat-tam-test/complique.rat" in ()
+
 

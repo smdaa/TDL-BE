@@ -1,3 +1,4 @@
+
 (* Module de la passe de gestion des identifiants *)
 module PasseTdsRat : Passe.Passe with type t1 = Ast.AstSyntax.programme and type t2 = Ast.AstTds.programme =
 struct
@@ -9,6 +10,29 @@ struct
 
   type t1 = Ast.AstSyntax.programme
   type t2 = Ast.AstTds.programme
+
+(* analyse_tds_affectable : AstSyntax.affectable -> tds -> boolean -> AstTds.affectable *)
+(* Paramètre tds : la table des symboles courante *)
+(* Paramètre a : l'affectable à analyser *)
+(* Paramètre modif : indique si l’affectable est modifié*)
+(* Vérifie la bonne utilisation des affectables et tranforme l'affectable
+en une affectable de type AstTds.instruction *)
+(* Erreur si mauvaise utilisation des identifiants *)
+let rec analyse_tds_affectable tds (a:AstSyntax.affectable) modif =
+  match a with 
+  | AstSyntax.Ident n ->
+    begin
+      match chercherGlobalement tds n with 
+      | None -> raise (IdentifiantNonDeclare n)
+      | Some info ->
+        begin
+          match info_ast_to_info info with 
+          | InfoFun _ -> raise (MauvaiseUtilisationIdentifiant n)
+          | InfoVar _ -> Ident info
+          | InfoConst _ -> if modif then raise (MauvaiseUtilisationIdentifiant n) else Ident info
+        end
+    end
+  | AstSyntax.Valeur v -> Valeur (analyse_tds_affectable tds v true)
 
 
 (* analyse_tds_expression : AstSyntax.expression -> AstTds.expression *)
@@ -41,18 +65,6 @@ let rec analyse_tds_expression tds e =
   | AstSyntax.Denominateur e ->
     let ne = (analyse_tds_expression tds e) in
     Denominateur ne
-  | AstSyntax.Ident n ->
-    begin
-      match chercherGlobalement tds n with 
-      | None -> raise (IdentifiantNonDeclare n)
-      | Some info ->
-        begin
-          match info_ast_to_info info with 
-          | InfoVar _ -> Ident info
-          | InfoConst (_, v) -> Entier v
-          | _ -> raise (MauvaiseUtilisationIdentifiant n)
-        end
-    end
   | AstSyntax.True -> True
   | AstSyntax.False -> False
   | AstSyntax.Entier v -> Entier v
@@ -60,6 +72,21 @@ let rec analyse_tds_expression tds e =
     let ne1 = (analyse_tds_expression tds e1) in
     let ne2 = (analyse_tds_expression tds e2) in
     Binaire(op, ne1, ne2)
+  | AstSyntax.Affectable a -> Affectable (analyse_tds_affectable tds a false)
+  | AstSyntax.Null  -> Null
+  | AstSyntax.New t -> New t
+  | AstSyntax.Adresse n ->
+    begin
+      match chercherGlobalement tds n with
+      | None -> raise (IdentifiantNonDeclare n)
+      | Some info ->
+        begin
+          match info_ast_to_info info with 
+          | InfoFun _ -> raise (MauvaiseUtilisationIdentifiant n)
+          | InfoVar _ -> Adresse info
+          | InfoConst _ -> raise (MauvaiseUtilisationIdentifiant n)
+        end
+    end
 
 (* analyse_tds_instruction : AstSyntax.instruction -> tds -> AstTds.instruction *)
 (* Paramètre tds : la table des symboles courante *)
@@ -92,29 +119,9 @@ let rec analyse_tds_instruction tds i =
             il a donc déjà été déclaré dans le bloc courant *) 
             raise (DoubleDeclaration n)
       end
-  | AstSyntax.Affectation (n,e) ->
-      begin
-        match chercherGlobalement tds n with
-        | None -> 
-          (* L'identifiant n'est pas trouvé dans la tds globale. *) 
-          raise (IdentifiantNonDeclare n)
-        | Some info -> 
-          (* L'identifiant est trouvé dans la tds globale, 
-          il a donc déjà été déclaré. L'information associée est récupérée. *) 
-          begin
-            match info_ast_to_info info with
-            | InfoVar _ -> 
-              (* Vérification de la bonne utilisation des identifiants dans l'expression *)
-              (* et obtention de l'expression transformée *) 
-              let ne = analyse_tds_expression tds e in
-              (* Renvoie de la nouvelle affectation où le nom a été remplacé par l'information 
-              et l'expression remplacée par l'expression issue de l'analyse *)
-               Affectation (ne, info)
-            |  _ ->
-              (* Modification d'une constante ou d'une fonction *)  
-              raise (MauvaiseUtilisationIdentifiant n) 
-          end
-      end
+  | AstSyntax.Affectation (a,e) ->
+    (* Dans affectation donc affectable en ecriture *)
+    Affectation ((analyse_tds_affectable tds a true), (analyse_tds_expression tds e) )
   | AstSyntax.Constante (n,v) -> 
       begin
         match chercherLocalement tds n with

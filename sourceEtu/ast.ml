@@ -46,6 +46,12 @@ struct
 (* Opérateurs binaires de Rat *)
 type binaire = Plus | Mult | Equ | Inf
 
+type affectable =
+  (* Accès à un identifiant représenté par son nom *)
+  | Ident of string
+  (* Accès à la valeur d'un pointeur *)
+  | Valeur of affectable
+
 (* Expressions de Rat *)
 type expression =
   (* Appel de fonction représenté par le nom de la fonction et la liste des paramètres réels *)
@@ -56,8 +62,6 @@ type expression =
   | Numerateur of expression
   (* Accès au dénominateur d'un rationnel *)
   | Denominateur of expression
-  (* Accès à un identifiant représenté par son nom *)
-  | Ident of string
   (* Booléen vrai *)
   | True
   (* Booléen faux *)
@@ -66,6 +70,14 @@ type expression =
   | Entier of int
   (* Opération binaire représentée par l'opérateur, l'opérande gauche et l'opérande droite *)
   | Binaire of binaire * expression * expression
+  (* Affectable  *)
+  | Affectable of affectable
+  (* Null *)
+  | Null
+  (* new de type *)
+  | New of typ
+  (* Accès à l'adress d'une variable *)
+  | Adresse  of string
 
 (* Instructions de Rat *)
 type bloc = instruction list
@@ -73,7 +85,7 @@ and instruction =
   (* Déclaration de variable représentée par son type, son nom et l'expression d'initialisation *)
   | Declaration of typ * string * expression
   (* Affectation d'une variable représentée par son nom et la nouvelle valeur affectée *)
-  | Affectation of string * expression
+  | Affectation of affectable * expression
   (* Déclaration d'une constante représentée par son nom et sa valeur (entier) *)
   | Constante of string * int
   (* Affichage d'une expression *)
@@ -90,6 +102,8 @@ type fonction = Fonction of typ * string * (typ * string) list * instruction lis
 (* Structure d'un programme Rat *)
 (* liste de fonction - programme principal *)
 type programme = Programme of fonction list * bloc
+
+
 
 end
 
@@ -109,6 +123,11 @@ struct
     | Equ -> "= "
     | Inf -> "< "
 
+  let rec string_of_affectable a =
+    match a with 
+    | Valeur a -> "valeur de " ^ string_of_affectable a
+    | Ident n -> n ^ ""
+
   (* Conversion des expressions *)
   let rec string_of_expression e =
     match e with
@@ -116,17 +135,20 @@ struct
     | Rationnel (e1,e2) -> "["^(string_of_expression e1)^"/"^(string_of_expression e2)^"] "
     | Numerateur e1 -> "num "^(string_of_expression e1)^" "
     | Denominateur e1 ->  "denom "^(string_of_expression e1)^" "
-    | Ident n -> n^" "
     | True -> "true "
     | False -> "false "
     | Entier i -> (string_of_int i)^" "
     | Binaire (b,e1,e2) -> (string_of_expression e1)^(string_of_binaire b)^(string_of_expression e2)^" "
+    | Null -> "Null"
+    | New t -> "new " ^ (string_of_type t) ^ " "
+    | Affectable a -> (string_of_affectable a)^" "
+    | Adresse n -> "adress " ^ n ^ " "
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
     match i with
     | Declaration (t, n, e) -> "Declaration  : "^(string_of_type t)^" "^n^" = "^(string_of_expression e)^"\n"
-    | Affectation (n,e) ->  "Affectation  : "^n^" = "^(string_of_expression e)^"\n"
+    | Affectation (a,e) ->  "Affectation  : "^(string_of_affectable a)^" = "^(string_of_expression e)^"\n"
     | Constante (n,i) ->  "Constante  : "^n^" = "^(string_of_int i)^"\n"
     | Affichage e ->  "Affichage  : "^(string_of_expression e)^"\n"
     | Conditionnelle (c,t,e) ->  "Conditionnelle  : IF "^(string_of_expression c)^"\n"^
@@ -159,6 +181,10 @@ end
 module AstTds =
 struct
 
+  type affectable =
+  | Ident of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
+  | Valeur of affectable
+
   (* Expressions existantes dans notre langage *)
   (* ~ expression de l'AST syntaxique où les noms des identifiants ont été 
   remplacés par les informations associées aux identificateurs *)
@@ -167,11 +193,14 @@ struct
     | Rationnel of expression * expression
     | Numerateur of expression
     | Denominateur of expression
-    | Ident of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
     | True
     | False
     | Entier of int
     | Binaire of AstSyntax.binaire * expression * expression
+    | Null
+    | New of typ
+    | Affectable of affectable
+    | Adresse of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été 
@@ -180,7 +209,7 @@ struct
   type bloc = instruction list
   and instruction =
     | Declaration of typ * expression * Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
-    | Affectation of  expression * Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
+    | Affectation of  affectable * expression (* le nom de l'identifiant est remplacé par ses informations *)
     | Affichage of expression
     | Conditionnelle of expression * bloc * bloc
     | TantQue of expression * bloc
@@ -204,6 +233,10 @@ end
 module AstType =
 struct
 
+type affectable =
+  | Ident of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
+  | Valeur of affectable
+
 (* Opérateurs binaires existants dans Rat - résolution de la surcharge *)
 type binaire = PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | Inf
 
@@ -214,11 +247,15 @@ type expression =
   | Rationnel of expression * expression
   | Numerateur of expression
   | Denominateur of expression
-  | Ident of Tds.info_ast
   | True
   | False
   | Entier of int
   | Binaire of binaire * expression * expression
+  | Null
+  | New of typ
+  | Affectable of affectable
+  | Adresse of Tds.info_ast 
+
 
 (* instructions existantes Rat *)
 (* = instruction de AstTds + informations associées aux identificateurs, mises à jour *)
@@ -226,7 +263,7 @@ type expression =
 type bloc = instruction list
  and instruction =
   | Declaration of expression * Tds.info_ast
-  | Affectation of expression * Tds.info_ast
+  | Affectation of affectable * expression 
   | AffichageInt of expression
   | AffichageRat of expression
   | AffichageBool of expression

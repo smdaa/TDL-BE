@@ -1,5 +1,4 @@
 
-
 open Compilateur
 open PasseTdsRat
 open PasseTypeRat

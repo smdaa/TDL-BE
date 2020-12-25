@@ -5,17 +5,30 @@ open Compilateur
 let runtamcmde = "java -jar ../../runtam.jar"
 (* let runtamcmde = "java -jar /mnt/n7fs/.../tools/runtam/runtam.jar" *)
 
+let show_error file output =
+  try
+    Scanf.sscanf output "Syntaxic error: asm.SyntaxicError: Error in line %d, column %d"
+      (fun line column ->
+        let ic = Unix.open_process_in ("sed -n "^string_of_int line ^"p "^file) in
+        let err = input_line ic in
+        close_in ic;
+        let col = String.make (column-1) ' ' in
+        Format.asprintf "%s\n%s^" err col)
+  with Scanf.Scan_failure _ -> ""
+
 (* Execute the TAM code obtained from the rat file and return the ouptut of this code *)
 let runtamcode cmde ratfile =
   let tamcode = compiler ratfile in
   let (tamfile, chan) = Filename.open_temp_file "test" ".tam" in
   output_string chan tamcode;
+  flush chan;
   close_out chan;
   let ic = Unix.open_process_in (cmde ^ " " ^ tamfile) in
   let printed = input_line ic in
   close_in ic;
-  Sys.remove tamfile;    (* à commenter si on veut étudier le code TAM. *)
-  String.trim printed
+  let error = show_error tamfile printed in
+  Sys.remove tamfile;   (* à commenter si on veut étudier le code TAM. *)
+  String.trim (printed^"\n"^error)
 
 (* Compile and run ratfile, then print its output *)
 let runtam ratfile =
@@ -101,3 +114,11 @@ let%expect_test "factfuns" =
 let%expect_test "factrec" =
   runtam "../../fichiersRat/src-rat-tam-test/factrec.rat";
   [%expect{| 120 |}]
+
+let%expect_test "pointeur1" =
+  runtam "../../fichiersRat/src-rat-tam-test/pointeur1.rat";
+  [%expect{| 3 |}]
+
+let%expect_test "pointeur1" =
+  runtam "../../fichiersRat/src-rat-tam-test/pointeur2.rat";
+  [%expect{| 5 |}]

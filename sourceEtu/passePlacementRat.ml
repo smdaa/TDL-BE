@@ -1,3 +1,4 @@
+
 (* Module de la passe de placemment *)
 module PassePlacementRat : Passe.Passe with type t1 = Ast.AstType.programme and type t2 = Ast.AstPlacement.programme =
 struct
