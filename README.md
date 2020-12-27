@@ -40,17 +40,18 @@
 | n=ID   {Ident n}
 ```
 # La surcharge de fonctions
+TODO
+
+# Les types énumérés
 ### Changes in **lexer.ml** :
-None
+* add tokens : {enum, ','} :
+```
+| "enum"    {ENUMERATION}
+|  ","      {COMMA}
+| ['A'-'Z'](['A'-'Z''a'-'z''0'-'9']|"-"|"_")* as n
+    {TID n}
+```
 ### Changes in **parser.mly** :
-None
-### Changes in **tds.ml** :
-```
-| InfoFun of string * typ * (typ list) list
-```
-
-
-
 
 
 

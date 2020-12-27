@@ -1,4 +1,4 @@
-type typ = Bool | Int | Rat | Undefined | Pointeur of typ
+type typ = Bool | Int | Rat | Undefined | Pointeur of typ | TPENUM 
 
 let rec string_of_type t = 
   match t with
@@ -7,6 +7,7 @@ let rec string_of_type t =
   | Rat  ->  "Rat"
   | Undefined -> "Undefined"
   | Pointeur t -> "Pointeur sur " ^ (string_of_type t)
+  | TPENUM -> "Enumeration"
 
 
 let rec est_compatible t1 t2 =
@@ -29,4 +30,5 @@ let getTaille t =
   | Rat -> 2
   | Undefined -> 0
   | Pointeur _ -> 1
+  | TPENUM -> 1
   

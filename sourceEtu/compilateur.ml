@@ -34,16 +34,14 @@ end
 
 (* Compilateur créant l'AST *)
 
-(*
+(* 
 module CompilateurRat = Compilateur (PasseTdsNop) (PasseNop) (PasseNop) (PasseCodeNopNop)
 *)
 
 
 (* + passe de résolution des identifiants *)
-(* 
 open PasseTdsRat
 module CompilateurRat = Compilateur (PasseTdsRat) (PasseTypeNop) (PasseNop) (PasseCodeNopNop) 
-*)
 
 (* + passe de typage *)
 (*
@@ -60,12 +58,14 @@ open PassePlacementRat
 module CompilateurRat = Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat) (PasseCodeNop)
 *)
 
+(*
 (* + passe de génération de code -> compilateur complet *)
 open PasseTdsRat
 open PasseTypeRat
 open PassePlacementRat
 open PasseCodeRatToTam
 module CompilateurRat = Compilateur (PasseTdsRat) (PasseTypeRat) (PassePlacementRat) (PasseCodeRatToTam)
+*)
 
 open Lexing
 
