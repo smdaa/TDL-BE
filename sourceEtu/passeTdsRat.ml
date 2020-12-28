@@ -98,6 +98,7 @@ let rec analyse_tds_expression tds e =
             | _ -> raise (MauvaiseUtilisationIdentifiant tid)
         end
     end
+    
 
 (* analyse_tds_instruction : AstSyntax.instruction -> tds -> AstTds.instruction *)
 (* Paramètre tds : la table des symboles courante *)
@@ -218,13 +219,13 @@ let analyse_tds_enumeration maintds (AstSyntax.Enumeration(n, ln)) =
     match chercherGlobalement tds x with 
       | Some _ -> raise (DoubleDeclaration x)
       | None  ->
-        let info_x = info_to_info_ast (InfoVar(x, Undefined, 0, "")) in ajouter tds x info_x;
+        let info_x = info_to_info_ast (InfoVar(x, Enum n, 0, "")) in ajouter tds x info_x;
         info_x
   in 
   match chercherGlobalement maintds n with 
   | Some _ -> raise (DoubleDeclaration n)
   | None ->
-    let info = info_to_info_ast (InfoVar(n, Undefined, 0, "")) in ajouter maintds n info;
+    let info = info_to_info_ast (InfoVar(n, Enum n, 0, "")) in ajouter maintds n info;
     let info_l = List.map (aux maintds) ln in
     Enumeration(info, info_l)
 
@@ -237,9 +238,9 @@ en un programme de type AstTds.ast *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyser (AstSyntax.Programme (enumerations, fonctions, prog)) =
   let tds = creerTDSMere () in
+  let ne = List.map (analyse_tds_enumeration tds) enumerations in
   let nf = List.map (analyse_tds_fonction tds) fonctions in
   let nb = analyse_tds_bloc tds prog in
-  let ne = List.map (analyse_tds_enumeration tds) enumerations in
   Programme (ne, nf, nb)
 
 end

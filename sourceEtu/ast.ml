@@ -133,7 +133,7 @@ struct
 
   let string_of_enumeration en = 
     let Enumeration(n, _) = en in 
-    "enumeration " ^ n 
+    "enumeration " ^ n ^ " : \n" 
 
   (* Conversion des expressions *)
   let rec string_of_expression e =
@@ -249,8 +249,10 @@ type affectable =
   | Ident of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
   | Valeur of affectable
 
+type enumeration = Enumeration of Tds.info_ast * Tds.info_ast list
+
 (* Opérateurs binaires existants dans Rat - résolution de la surcharge *)
-type binaire = PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | Inf
+type binaire = PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | EquEnum | Inf
 
 (* Expressions existantes dans Rat *)
 (* = expression de AstTds *)
@@ -267,6 +269,7 @@ type expression =
   | New of typ
   | Affectable of affectable
   | Adresse of Tds.info_ast 
+  | Tident of Tds.info_ast
 
 
 (* instructions existantes Rat *)
@@ -287,7 +290,7 @@ type bloc = instruction list
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list * expression 
 
 (* Structure d'un programme dans notre langage *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of enumeration list * fonction list * bloc
 
 let taille_variables_declarees i = 
   match i with

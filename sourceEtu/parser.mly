@@ -99,7 +99,7 @@ typ :
 | INT     {Int}
 | RAT     {Rat}
 | t=typ MULT {Pointeur(t)}
-| TID {TPENUM}
+| t=TID {Enum(t)}
 
 e : 
 | CALL n=ID PO lp=cp PF   {AppelFonction (n,lp)}
@@ -118,7 +118,7 @@ e :
 | NULL                    {Null}
 | PO NEW t=typ PF         {New (t)}
 | AMV n=ID                {Adresse (n)}
-| n=TID                     {Tident n}
+| n=TID                   {Tident n}
 
 cp :
 |               {[]}

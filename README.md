@@ -52,7 +52,17 @@ TODO
     {TID n}
 ```
 ### Changes in **parser.mly** :
+```
+main : lenu = enums lfi = prog EOF     {let (Programme (_,lf1,li))=lfi in (Programme (lenu,lf1,li))}
 
+enums : en1 = enum en2 = enums {en1::en2}
+      |                          {[]}
+
+enum : ENUMERATION n = TID AO x = ids AF PV   {Enumeration(n,x)}
+
+ids : n=TID {[n]}
+    | n=TID COMMA x=ids {n::x}
+```
 
 
 

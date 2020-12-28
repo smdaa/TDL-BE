@@ -1,11 +1,8 @@
 enum Mois {Janvier, Fevrier, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre};
 
-int plus1 (int a int b){
-  int c = 1;
-  return (a+(b+c));
-}
-
 fonction{
-  int x = 3;
-  bool b = (Mois=Mois);
+  int x = 3;	
+  int y = 4;
+  bool b1 = (Janvier = Janvier);
+  bool b2 = (Janvier = Lundi);
 }
