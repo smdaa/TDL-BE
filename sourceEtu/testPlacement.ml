@@ -1,4 +1,4 @@
-(*
+
 open Compilateur
 open PasseTdsRat
 open PasseTypeRat
@@ -216,4 +216,5 @@ let%test "test6_z1" =
   let%test "test12_f_i" = 
     test "../../fichiersRat/src-rat-placement-test/test12.rat"  "f" ("i",1)  (-1, "LB")
 
-*)
+  let%test "testenum1" = 
+    test "../../fichiersRat/src-rat-placement-test/testEnum1.rat"  "fonction" ("x",1)  (0, "SB")

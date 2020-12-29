@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de placemment *)
 module PassePlacementRat : Passe.Passe with type t1 = Ast.AstType.programme and type t2 = Ast.AstPlacement.programme =
 struct
@@ -46,9 +46,29 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li, e)) =
   analyse_placement_bloc li 3 "LB";
   Fonction(info, lp, li, e)
 
-let analyser (AstType.Programme(fonctions, prog)) =
+let analyse_placement_one_enumeration info base = 
+  match info_ast_to_info info with 
+  | InfoVar (_,t, _, _) -> 
+    modifier_adresse_info (base + getTaille t) "SB" info ;
+    getTaille t
+  | _ -> failwith "erreur interne"
+
+let analyse_placement_enumeration (AstType.Enumeration(n,ln)) = 
+  let _ = List.fold_left (fun d en -> d + analyse_placement_one_enumeration en (d)) 0 ln in 
+  Enumeration(n,ln)
+
+let rec get_nombre_enum enumerations = 
+  let aux (AstType.Enumeration(_,ln)) =
+    List.fold_left (fun acc _ -> 1 + acc) 0 ln
+  in
+  match enumerations with 
+  | [] -> 0
+  | h::t -> (aux h) + get_nombre_enum t
+
+let analyser (AstType.Programme(enumerations, fonctions, prog)) =
+  let len = List.map analyse_placement_enumeration enumerations in
   let lf = List.map analyse_placement_fonction fonctions in
-  let _ = analyse_placement_bloc prog 0 "SB" in
-  Programme(lf, prog)
+  let base = get_nombre_enum enumerations in 
+  let _ = analyse_placement_bloc prog base "SB" in
+  Programme(len, lf, prog)
 end
-*)

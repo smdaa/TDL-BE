@@ -95,7 +95,7 @@ let rec analyse_type_expression e =
   | AstTds.Tident n ->
     begin
       match info_ast_to_info n with 
-      | InfoVar(x,_,_,_) -> (Enum x, Tident n)
+      | InfoVar(_,t,_,_) -> (t, Tident n)
       | _ -> failwith "internal error"
     end
 

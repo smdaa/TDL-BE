@@ -324,6 +324,7 @@ let%test_unit "testenum2" =
   with
   | IdentifiantNonDeclare("Lundi") -> ()
 
+
 let%test_unit "testenum3" = 
   let _ = compiler "../../fichiersRat/src-rat-tds-test/testEnum3.rat" in ()
 
