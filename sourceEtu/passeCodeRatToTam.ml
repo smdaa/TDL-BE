@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de génération de code *)
 module PasseCodeRatToTam : Passe.Passe with type t1 = Ast.AstPlacement.programme and type t2 = string =
 struct
@@ -82,6 +82,12 @@ let rec analyse_code_expression e =
       | _ -> failwith "internal error" 
     end
   | Affectable a -> (analyse_code_affectable a false)
+  | Tident n -> 
+    begin
+      match info_ast_to_info n with 
+      | InfoVar (_, t, dep, reg) -> ("LOAD (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n")
+      | _ -> failwith "erreur interne"
+    end
 
               
 
@@ -155,4 +161,4 @@ let analyser (AstPlacement.Programme(fonctions, bloc)) =
   "HALT\n"
 
 end
-*)
+

@@ -7,6 +7,7 @@ struct
   open Type
   open Ast
   open AstPlacement
+  (*open Format*)
 
   type t1 = Ast.AstType.programme
   type t2 = Ast.AstPlacement.programme
@@ -18,6 +19,7 @@ let rec analyse_placement_instruction i base reg =
     match info_ast_to_info info with 
     | InfoVar(_, t, _, _) -> 
       modifier_adresse_info base reg info;
+      (*let () = printf "%s adresse %d SB \n" n (base) in *)
       getTaille t 
     | _ -> failwith "erreur interne"
     end
@@ -46,29 +48,30 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li, e)) =
   analyse_placement_bloc li 3 "LB";
   Fonction(info, lp, li, e)
 
-let analyse_placement_one_enumeration info base = 
+let analyse_placement_valeur info base = 
   match info_ast_to_info info with 
   | InfoVar (_,t, _, _) -> 
     modifier_adresse_info (base + getTaille t) "SB" info ;
+    (*let () = printf "%s adresse %d SB \n" n (base + getTaille t) in *)
     getTaille t
   | _ -> failwith "erreur interne"
 
-let analyse_placement_enumeration (AstType.Enumeration(n,ln)) = 
-  let _ = List.fold_left (fun d en -> d + analyse_placement_one_enumeration en (d)) 0 ln in 
-  Enumeration(n,ln)
+let analyse_placement_enumeration base (AstType.Enumeration(_,ln)) = 
+  let d = List.fold_left (fun d info -> d + analyse_placement_valeur info (d)) (base) ln in 
+  d + 1
+
+let analyse_placement_enumerations enumerations =
+  let _ = List.fold_left (fun d en -> d + (analyse_placement_enumeration d en)) (-1) enumerations in 
+  enumerations
 
 let rec get_nombre_enum enumerations = 
-  let aux (AstType.Enumeration(_,ln)) =
-    List.fold_left (fun acc _ -> 1 + acc) 0 ln
-  in
   match enumerations with 
   | [] -> 0
-  | h::t -> (aux h) + get_nombre_enum t
+  | h::t -> let AstType.Enumeration(_,ln) = h in (List.length ln) + (get_nombre_enum t)
 
 let analyser (AstType.Programme(enumerations, fonctions, prog)) =
-  let len = List.map analyse_placement_enumeration enumerations in
+  let _ = analyse_placement_enumerations enumerations in 
   let lf = List.map analyse_placement_fonction fonctions in
-  let base = get_nombre_enum enumerations in 
-  let _ = analyse_placement_bloc prog base "SB" in
-  Programme(len, lf, prog)
+  let _ = analyse_placement_bloc prog (get_nombre_enum enumerations) "SB" in
+  Programme(enumerations, lf, prog)
 end

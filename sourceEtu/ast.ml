@@ -311,7 +311,7 @@ module AstPlacement =
 struct
 type affectable = AstType.affectable
 
-type enumeration = Enumeration of Tds.info_ast * Tds.info_ast list
+
 (* Expressions existantes dans notre langage *)
 (* = expression de AstType  *)
 type expression = AstType.expression
@@ -326,7 +326,7 @@ type bloc = instruction list
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list * expression
 
 (* Structure d'un programme dans notre langage *)
-type programme = Programme of enumeration list * fonction list * bloc
+type programme = Programme of AstType.enumeration list * fonction list * bloc
 
 end
 

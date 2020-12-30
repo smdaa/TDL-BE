@@ -217,4 +217,7 @@ let%test "test6_z1" =
     test "../../fichiersRat/src-rat-placement-test/test12.rat"  "f" ("i",1)  (-1, "LB")
 
   let%test "testenum1" = 
-    test "../../fichiersRat/src-rat-placement-test/testEnum1.rat"  "fonction" ("x",1)  (0, "SB")
+    test "../../fichiersRat/src-rat-placement-test/testEnum1.rat"  "main" ("x",1)  (19, "SB")
+
+  let%test "testenum2" = 
+    test "../../fichiersRat/src-rat-placement-test/testEnum1.rat"  "main" ("y",1)  (20, "SB")

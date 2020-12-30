@@ -1,10 +1,7 @@
-enum Mois {Janvier, Fevrier, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre };
+enum Mois {Janvier, Fevrier, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre};
+enum Jour {Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche};
 
-int plus1 (int a int b){
-  int c = 1;
-  return (a+(b+c));
-}
-
-fonction{
-  int x = 3;
+main{
+  int x = 0;
+  int y = 1;
 }
