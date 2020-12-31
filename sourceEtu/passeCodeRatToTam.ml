@@ -71,6 +71,7 @@ let rec analyse_code_expression e =
       | EquInt -> "SUBR IEq\n"
       | EquBool -> "SUBR BEq\n"
       | Inf -> "SUBR ILss\n"
+      | EquEnum -> "SUBR IEq\n"
     end
   | Null  -> "SUBR MVoid\n"
   | New t -> "LOADL " ^ (string_of_int (getTaille t)) ^ "\n" ^
@@ -151,12 +152,25 @@ let analyse_code_fonction (AstPlacement.Fonction(info, _, li, e)) =
     "RETURN (" ^ (string_of_int taille_return) ^ " )" ^ (string_of_int taille_parametres) ^ "\n"
   | _ -> failwith "erreur interne"
 
-let analyser (AstPlacement.Programme(fonctions, bloc)) = 
+let analyse_code_valeur info = 
+  match info_ast_to_info info with 
+  | InfoVar(_, t, dep, reg) -> 
+    "PUSH " ^ (string_of_int (getTaille t)) ^ "\n" ^
+    "LOADL " ^ (string_of_int dep) ^ "\n" ^
+    "STORE (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n" 
+  | _ -> failwith "internal error"
+
+let analyse_code_enumeration (AstType.Enumeration(_, ln)) = 
+  String.concat "" (List.map analyse_code_valeur ln)
+
+let analyser (AstPlacement.Programme(enumerations,fonctions, bloc)) = 
+  let ne = String.concat "" (List.map analyse_code_enumeration enumerations) in
   let lf = String.concat "" (List.map analyse_code_fonction fonctions) in
   let b = (analyse_code_bloc bloc) in
-  getEntete () ^ 
+  getEntete () ^
   lf ^ "\n" ^
   "main\n" ^ 
+  ne ^ "\n" ^ 
   b ^ "\n" ^
   "HALT\n"
 
