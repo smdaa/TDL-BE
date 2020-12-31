@@ -1,0 +1,4 @@
+fonction{
+  int x = 3;
+  px = &x;
+}

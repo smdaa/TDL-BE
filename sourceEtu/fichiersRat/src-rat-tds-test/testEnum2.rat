@@ -1,0 +1,8 @@
+enum Mois {Janvier, Fevrier, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre};
+
+fonction{
+  int x = 3;	
+  int y = 4;
+  bool b1 = (Janvier = Janvier);
+  bool b2 = (Janvier = Lundi);
+}
