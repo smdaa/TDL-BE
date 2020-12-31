@@ -9,6 +9,7 @@ open Ast.AstSyntax
 
 %token <int> ENTIER
 %token <string> ID
+%token <string> TID
 %token RETURN
 %token PV
 %token AO
@@ -38,6 +39,8 @@ open Ast.AstSyntax
 %token AMV
 %token NULL 
 %token NEW
+%token ENUMERATION
+%token COMMA
 %token EOF
 
 (* Type de l'attribut synthétisé des non-terminaux *)
@@ -57,11 +60,19 @@ open Ast.AstSyntax
 
 %%
 
-main : lfi = prog EOF     {lfi}
+main : lenu = enums lfi = prog EOF     {let (Programme (_,lf1,li))=lfi in (Programme (lenu,lf1,li))}
+
+enums : en1 = enum en2 = enums {en1::en2}
+      |                          {[]}
+
+enum : ENUMERATION n = TID AO x = ids AF PV   {Enumeration(n,x)}
+
+ids : n=TID {[n]}
+    | n=TID COMMA x=ids {n::x}
 
 prog :
-| lf = fonc  lfi = prog   {let (Programme (lf1,li))=lfi in (Programme (lf::lf1,li))}
-| ID li = bloc            {Programme ([],li)}
+| lf = fonc  lfi = prog   {let (Programme (lenu,lf1,li))=lfi in (Programme (lenu,lf::lf1,li))}
+| ID li = bloc            {Programme ([],[],li)}
 
 fonc : t=typ n=ID PO p=dp PF AO li=is RETURN exp=e PV AF {Fonction(t,n,p,li,exp)}
 
@@ -88,6 +99,7 @@ typ :
 | INT     {Int}
 | RAT     {Rat}
 | t=typ MULT {Pointeur(t)}
+| t=TID {Enum(t)}
 
 e : 
 | CALL n=ID PO lp=cp PF   {AppelFonction (n,lp)}
@@ -106,6 +118,7 @@ e :
 | NULL                    {Null}
 | PO NEW t=typ PF         {New (t)}
 | AMV n=ID                {Adresse (n)}
+| n=TID                   {Tident n}
 
 cp :
 |               {[]}

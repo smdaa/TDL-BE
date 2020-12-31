@@ -119,6 +119,19 @@ let%expect_test "pointeur1" =
   runtam "../../fichiersRat/src-rat-tam-test/pointeur1.rat";
   [%expect{| 3 |}]
 
-let%expect_test "pointeur1" =
+let%expect_test "pointeur2" =
   runtam "../../fichiersRat/src-rat-tam-test/pointeur2.rat";
   [%expect{| 5 |}]
+
+let%expect_test "enum2" =
+  runtam "../../fichiersRat/src-rat-tam-test/enum2.rat";
+  [%expect{| [9/4][27/14][27/16][3/2] |}]
+
+let%expect_test "enum1" =
+  runtam "../../fichiersRat/src-rat-tam-test/enum1.rat";
+  [%expect{| truetruefalsefalse |}]
+
+let%expect_test "enum3" =
+  runtam "../../fichiersRat/src-rat-tam-test/enum3.rat";
+  [%expect{| falsetrue |}]
+

@@ -39,11 +39,30 @@
 ```
 | n=ID   {Ident n}
 ```
+# La surcharge de fonctions
+TODO
 
+# Les types énumérés
+### Changes in **lexer.ml** :
+* add tokens : {enum, ','} :
+```
+| "enum"    {ENUMERATION}
+|  ","      {COMMA}
+| ['A'-'Z'](['A'-'Z''a'-'z''0'-'9']|"-"|"_")* as n
+    {TID n}
+```
+### Changes in **parser.mly** :
+```
+main : lenu = enums lfi = prog EOF     {let (Programme (_,lf1,li))=lfi in (Programme (lenu,lf1,li))}
 
+enums : en1 = enum en2 = enums {en1::en2}
+      |                          {[]}
 
+enum : ENUMERATION n = TID AO x = ids AF PV   {Enumeration(n,x)}
 
-
+ids : n=TID {[n]}
+    | n=TID COMMA x=ids {n::x}
+```
 
 
 

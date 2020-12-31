@@ -8,6 +8,7 @@ struct
   open Ast
   open AstTds
 
+
   type t1 = Ast.AstSyntax.programme
   type t2 = Ast.AstTds.programme
 
@@ -87,6 +88,18 @@ let rec analyse_tds_expression tds e =
           | InfoConst _ -> raise (MauvaiseUtilisationIdentifiant n)
         end
     end
+  | AstSyntax.Tident tid -> 
+    begin 
+      match chercherGlobalement tds tid with 
+      | None -> raise (IdentifiantNonDeclare tid)
+      | Some info ->
+        begin
+          match info_ast_to_info info with
+            | InfoVar _ -> Tident info
+            | _ -> raise (MauvaiseUtilisationIdentifiant tid)
+        end
+    end
+    
 
 (* analyse_tds_instruction : AstSyntax.instruction -> tds -> AstTds.instruction *)
 (* Paramètre tds : la table des symboles courante *)
@@ -202,16 +215,33 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li,e))  =
     let ne = analyse_tds_expression tdslocal e in
     Fonction (t, info, nlp, nli, ne)
   
+let analyse_tds_enumeration maintds (AstSyntax.Enumeration(n, ln)) = 
+  let aux tds x =
+    match chercherGlobalement tds x with 
+      | Some _ -> raise (DoubleDeclaration x)
+      | None  ->
+        let info_x = info_to_info_ast (InfoVar(x, Enum n, 0, "")) in ajouter tds x info_x;
+        info_x
+  in 
+  match chercherGlobalement maintds n with 
+  | Some _ -> raise (DoubleDeclaration n)
+  | None ->
+    let info = info_to_info_ast (InfoVar(n, Enum n, 0, "")) in ajouter maintds n info;
+    let info_l = List.map (aux maintds) ln in
+    Enumeration(info, info_l)
+
+
 
 (* analyser : AstSyntax.ast -> AstTds.ast *)
 (* Paramètre : le programme à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme le programme
 en un programme de type AstTds.ast *)
 (* Erreur si mauvaise utilisation des identifiants *)
-let analyser (AstSyntax.Programme (fonctions,prog)) =
+let analyser (AstSyntax.Programme (enumerations, fonctions, prog)) =
   let tds = creerTDSMere () in
+  let ne = List.map (analyse_tds_enumeration tds) enumerations in
   let nf = List.map (analyse_tds_fonction tds) fonctions in
   let nb = analyse_tds_bloc tds prog in
-  Programme (nf,nb)
+  Programme (ne, nf, nb)
 
 end

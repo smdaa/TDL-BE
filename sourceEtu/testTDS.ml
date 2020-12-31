@@ -1,3 +1,4 @@
+(*
 open Compilateur
 open Exceptions
 
@@ -299,12 +300,33 @@ let%test_unit "testpointeur3" =
   with
   | IdentifiantNonDeclare("px") -> ()
 
+
 let%test_unit "testpointeur4" = 
   try
     let _ = compiler "../../fichiersRat/src-rat-tds-test/testPointeur4.rat" 
     in raise ErreurNonDetectee
   with
   | MauvaiseUtilisationIdentifiant("plus1") -> ()
+
+
+
+let%test_unit "testenum1" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testEnum1.rat" 
+    in raise ErreurNonDetectee
+  with 
+  | DoubleDeclaration("Mois") -> ()
+
+let%test_unit "testenum2" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testEnum2.rat"
+    in raise ErreurNonDetectee
+  with
+  | IdentifiantNonDeclare("Lundi") -> ()
+
+
+let%test_unit "testenum3" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testEnum3.rat" in ()
 
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
@@ -369,3 +391,4 @@ let%test_unit "code_testfuns" =
 let%test_unit "code_complique" = 
   let _ = compiler   "../../fichiersRat/src-rat-tam-test/complique.rat" in ()
 
+*)

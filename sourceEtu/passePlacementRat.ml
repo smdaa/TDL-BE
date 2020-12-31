@@ -7,6 +7,7 @@ struct
   open Type
   open Ast
   open AstPlacement
+  (*open Format*)
 
   type t1 = Ast.AstType.programme
   type t2 = Ast.AstPlacement.programme
@@ -18,6 +19,7 @@ let rec analyse_placement_instruction i base reg =
     match info_ast_to_info info with 
     | InfoVar(_, t, _, _) -> 
       modifier_adresse_info base reg info;
+      (*let () = printf "%s adresse %d SB \n" n (base) in *)
       getTaille t 
     | _ -> failwith "erreur interne"
     end
@@ -46,8 +48,30 @@ let analyse_placement_fonction (AstType.Fonction(info, lp, li, e)) =
   analyse_placement_bloc li 3 "LB";
   Fonction(info, lp, li, e)
 
-let analyser (AstType.Programme(fonctions, prog)) =
+let analyse_placement_valeur info base = 
+  match info_ast_to_info info with 
+  | InfoVar (_,t, _, _) -> 
+    modifier_adresse_info (base + getTaille t) "SB" info ;
+    (*let () = printf "%s adresse %d SB \n" n (base + getTaille t) in *)
+    getTaille t
+  | _ -> failwith "erreur interne"
+
+let analyse_placement_enumeration base (AstType.Enumeration(_,ln)) = 
+  let d = List.fold_left (fun d info -> d + analyse_placement_valeur info (d)) (base) ln in 
+  d + 1
+
+let analyse_placement_enumerations enumerations =
+  let _ = List.fold_left (fun d en -> d + (analyse_placement_enumeration d en)) (-1) enumerations in 
+  enumerations
+
+let rec get_nombre_enum enumerations = 
+  match enumerations with 
+  | [] -> 0
+  | h::t -> let AstType.Enumeration(_,ln) = h in (List.length ln) + (get_nombre_enum t)
+
+let analyser (AstType.Programme(enumerations, fonctions, prog)) =
+  let _ = analyse_placement_enumerations enumerations in 
   let lf = List.map analyse_placement_fonction fonctions in
-  let _ = analyse_placement_bloc prog 0 "SB" in
-  Programme(lf, prog)
+  let _ = analyse_placement_bloc prog (get_nombre_enum enumerations) "SB" in
+  Programme(enumerations, lf, prog)
 end

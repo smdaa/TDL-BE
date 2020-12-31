@@ -1,4 +1,4 @@
-
+(*
 open Compilateur
 open Exceptions
 
@@ -486,6 +486,21 @@ let%test_unit "testpointeur4" =
   with
   | MauvaiseUtilisationIdentifiant("plus1") -> ()
 
+let%test_unit "testenum3" = 
+  let _ = compiler "../../fichiersRat/src-rat-type-test/testEnum3.rat" in ()
+
+let%test_unit "testenum4" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testEnum4.rat" in raise ErreurNonDetectee
+  with 
+  | TypesParametresInattendus(_, _) -> ()
+
+let%test_unit "testenum5" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testEnum5.rat" in raise ErreurNonDetectee
+  with 
+  | TypeInattendu(_, _) -> ()
+
 
 (* Fichiers de tests de la génération de code -> doivent passer le typage *)
 
@@ -549,4 +564,4 @@ let _ = compiler   "../../fichiersRat/src-rat-tam-test/testfuns.rat" in ()
 let%test_unit "code_complique" = 
 let _ = compiler   "../../fichiersRat/src-rat-tam-test/complique.rat" in ()
 
-
+*)

@@ -110,9 +110,12 @@ let analyser_param info =
     match info_ast_to_info info with
     | InfoFun(n,_,_) -> [(n,(List.flatten (List.map analyser_param lp))@(List.flatten (List.map (analyser_instruction) li)))]
     | _ -> failwith "Internal error"
-
+  (*
+  let analyser_enumeration (Ast.AstType.Enumeration (_,ln)) = 
+    List.flatten (List.map (analyser_param) ln)
+  *)
   (* Renvoie la suite des adresses des variables déclarées dans les fonctions et dans le programme principal *)
-  let analyser (Ast.AstPlacement.Programme (fonctions, prog)) =
+  let analyser (Ast.AstPlacement.Programme (_, fonctions, prog)) =
     ("main", List.flatten (List.map (analyser_instruction) prog))::(List.flatten (List.map (analyser_fonction) fonctions))
 
 end

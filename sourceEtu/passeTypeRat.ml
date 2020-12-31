@@ -77,6 +77,7 @@ let rec analyse_type_expression e =
     | Rat, Mult, Rat -> (Rat, Binaire(MultRat, ne1, ne2))
     | Int, Equ, Int  -> (Bool, Binaire(EquInt, ne1, ne2))
     | Bool, Equ, Bool -> (Bool, Binaire(EquBool, ne1, ne2))
+    | Enum _, Equ, Enum _ -> (Bool, Binaire(EquEnum, ne1, ne2))
     | Int, Inf, Int -> (Bool, Binaire(Inf, ne1, ne2))
     | _ -> raise(TypeBinaireInattendu(op,te1,te2))
     end
@@ -91,6 +92,13 @@ let rec analyse_type_expression e =
       | InfoVar(_,t,_,_) -> (Pointeur(t), Adresse a)
       | _ -> failwith "internal error"
     end
+  | AstTds.Tident n ->
+    begin
+      match info_ast_to_info n with 
+      | InfoVar(_,t,_,_) -> (t, Tident n)
+      | _ -> failwith "internal error"
+    end
+
 
 (* analyse_type_instruction : AstTds.instruction -> AstType.instruction *)
 (* Paramètre i : l'instruction à analyser *)
@@ -165,13 +173,16 @@ let analyse_type_fonction (AstTds.Fonction(t, info, lp, li, e))=
     Fonction(info, info_lp, nli, ne)
   else raise (TypeInattendu (te, t))
 
+let analyse_type_enumeration (AstTds.Enumeration(n, ln)) = Enumeration(n, ln)
+
 (* analyser : AstTds.ast -> AstType.ast *)
 (* Paramètre : le programme à analyser *)
 (* Vérifie la bonne utilisation des types et tranforme le programme
 en un programme de type AstType.fonction *)
 (* Erreur si mauvaise utilisation des types *)
-let analyser (AstTds.Programme (fonctions, prog)) = 
+let analyser (AstTds.Programme (enumerations,fonctions, prog)) = 
+  let ne = List.map (analyse_type_enumeration) enumerations in 
   let lf = List.map analyse_type_fonction fonctions in
   let b = analyse_type_bloc prog in
-  Programme(lf,b)
+  Programme(ne, lf, b)
 end

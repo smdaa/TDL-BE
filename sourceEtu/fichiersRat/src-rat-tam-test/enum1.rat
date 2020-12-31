@@ -1,0 +1,13 @@
+enum Mois {Janvier, Fevrier, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre};
+enum Jour {Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche};
+
+main {
+	bool b1 = (Janvier = Janvier);
+	bool b2 = (Lundi = Lundi);
+	bool b3 = (Janvier = Mars);
+	bool b4 = (Janvier = Jeudi);
+	print b1;
+	print b2;
+	print b3;
+	print b4;
+}

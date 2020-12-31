@@ -52,6 +52,8 @@ type affectable =
   (* Accès à la valeur d'un pointeur *)
   | Valeur of affectable
 
+type enumeration = Enumeration of string * string list
+
 (* Expressions de Rat *)
 type expression =
   (* Appel de fonction représenté par le nom de la fonction et la liste des paramètres réels *)
@@ -78,6 +80,7 @@ type expression =
   | New of typ
   (* Accès à l'adress d'une variable *)
   | Adresse  of string
+  | Tident of string
 
 (* Instructions de Rat *)
 type bloc = instruction list
@@ -101,7 +104,7 @@ type fonction = Fonction of typ * string * (typ * string) list * instruction lis
 
 (* Structure d'un programme Rat *)
 (* liste de fonction - programme principal *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of enumeration list * fonction list * bloc
 
 
 
@@ -128,6 +131,10 @@ struct
     | Valeur a -> "valeur de " ^ string_of_affectable a
     | Ident n -> n ^ ""
 
+  let string_of_enumeration en = 
+    let Enumeration(n, _) = en in 
+    "enumeration " ^ n ^ " : \n" 
+
   (* Conversion des expressions *)
   let rec string_of_expression e =
     match e with
@@ -143,6 +150,7 @@ struct
     | New t -> "new " ^ (string_of_type t) ^ " "
     | Affectable a -> (string_of_affectable a)^" "
     | Adresse n -> "adress " ^ n ^ " "
+    | Tident n -> n ^ " "
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
@@ -163,7 +171,8 @@ struct
                                         "Return "^(string_of_expression e)^"\n"
 
   (* Conversion d'un programme Rat *)
-  let string_of_programme (Programme (fonctions, instruction)) =
+  let string_of_programme (Programme (enumerations, fonctions, instruction)) =
+    (List.fold_right (fun f tq -> (string_of_enumeration f)^tq) enumerations "")^
     (List.fold_right (fun f tq -> (string_of_fonction f)^tq) fonctions "")^
     (List.fold_right (fun i tq -> (string_of_instruction i)^tq) instruction "")
 
@@ -185,6 +194,8 @@ struct
   | Ident of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
   | Valeur of affectable
 
+  type enumeration = Enumeration of Tds.info_ast * Tds.info_ast list
+
   (* Expressions existantes dans notre langage *)
   (* ~ expression de l'AST syntaxique où les noms des identifiants ont été 
   remplacés par les informations associées aux identificateurs *)
@@ -201,6 +212,7 @@ struct
     | New of typ
     | Affectable of affectable
     | Adresse of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
+    | Tident of Tds.info_ast
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été 
@@ -222,7 +234,7 @@ struct
   type fonction = Fonction of typ * Tds.info_ast * (typ * Tds.info_ast ) list * instruction list * expression 
 
   (* Structure d'un programme dans notre langage *)
-  type programme = Programme of fonction list * bloc
+  type programme = Programme of enumeration list * fonction list * bloc
 
 end
     
@@ -237,8 +249,10 @@ type affectable =
   | Ident of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
   | Valeur of affectable
 
+type enumeration = Enumeration of Tds.info_ast * Tds.info_ast list
+
 (* Opérateurs binaires existants dans Rat - résolution de la surcharge *)
-type binaire = PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | Inf
+type binaire = PlusInt | PlusRat | MultInt | MultRat | EquInt | EquBool | EquEnum | Inf
 
 (* Expressions existantes dans Rat *)
 (* = expression de AstTds *)
@@ -255,6 +269,7 @@ type expression =
   | New of typ
   | Affectable of affectable
   | Adresse of Tds.info_ast 
+  | Tident of Tds.info_ast
 
 
 (* instructions existantes Rat *)
@@ -275,7 +290,7 @@ type bloc = instruction list
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list * expression 
 
 (* Structure d'un programme dans notre langage *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of enumeration list * fonction list * bloc
 
 let taille_variables_declarees i = 
   match i with
@@ -294,6 +309,8 @@ end
 (* ******************************* *)
 module AstPlacement =
 struct
+type affectable = AstType.affectable
+
 
 (* Expressions existantes dans notre langage *)
 (* = expression de AstType  *)
@@ -309,8 +326,7 @@ type bloc = instruction list
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list * expression
 
 (* Structure d'un programme dans notre langage *)
-type programme = Programme of fonction list * bloc
+type programme = Programme of AstType.enumeration list * fonction list * bloc
 
 end
-
 
