@@ -1,0 +1,5 @@
+fonction{
+  int * px = (new int);
+  int x = 3;
+  px = &x;
+}

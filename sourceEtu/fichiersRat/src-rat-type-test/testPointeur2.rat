@@ -1,0 +1,5 @@
+fonction{
+  int * x = (new int);
+  rat * y = (new rat);
+  y = x;
+}

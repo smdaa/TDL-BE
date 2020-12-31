@@ -1,0 +1,7 @@
+enum Mois {Janvier, Fevrier, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Decembre};
+enum Jour {Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche};
+
+fonction{	
+	int b0 = (Janvier = Mars);
+	int b1 = (Janvier = Mardi);
+}
