@@ -63,6 +63,40 @@ enum : ENUMERATION n = TID AO x = ids AF PV   {Enumeration(n,x)}
 ids : n=TID {[n]}
     | n=TID COMMA x=ids {n::x}
 ```
+# La structure de contrˆole switch/case
+### Changes in **lexer.ml** :
+```
+| "switch"  {SWITCH}
+| "case"    {CASE}
+| "default" {DEFAULT}
+| ":"       {DBPT}
+| "break"   {BREAK}
+```
+### Changes in **parser.mly** :
+```
+i :
+| t=typ n=ID EQUAL e1=e PV          {Declaration (t,n,e1)}
+| n=a EQUAL e1=e PV                {Affectation (n,e1)}
+| CONST n=ID EQUAL e=ENTIER PV      {Constante (n,e)}
+| PRINT e1=e PV                     {Affichage (e1)}
+| IF exp=e li1=bloc ELSE li2=bloc   {Conditionnelle (exp,li1,li2)}
+| WHILE exp=e li=bloc               {TantQue (exp,li)}
+| SWITCH PO exp=e PF AO lc1=lc AF {Switch (exp,lc1)}
 
+lc :
+| c1=c lc1=lc {c1::lc1}
+| {[]}
+
+c:
+| CASE n=TID DBPT ls=is i=b {(Tident n,ls,i)}
+| CASE e=ENTIER DBPT ls=is i=b {(Entier e,ls,i)}
+| CASE TRUE DBPT ls=is i=b {(True,ls,i)}
+| CASE FALSE DBPT ls=is i=b {(False,ls,i)}
+| CASE DEFAULT DBPT ls=is i=b {(Default,ls,i)} 
+
+b :
+| {Notbreak}
+| BREAK {Break}
+```
 
 

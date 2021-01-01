@@ -81,6 +81,7 @@ type expression =
   (* Accès à l'adress d'une variable *)
   | Adresse  of string
   | Tident of string
+  | Default 
 
 (* Instructions de Rat *)
 type bloc = instruction list
@@ -97,6 +98,9 @@ and instruction =
   | Conditionnelle of expression * bloc * bloc
   (*Boucle TantQue représentée par la conditin d'arrêt de la boucle et le bloc d'instructions *)
   | TantQue of expression * bloc
+  | Break
+  | Notbreak
+  | Switch of expression * ((expression * bloc * instruction) list)
 
 (* Structure des fonctions de Rat *)
 (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction - expression de retour *)
@@ -213,6 +217,7 @@ struct
     | Affectable of affectable
     | Adresse of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
     | Tident of Tds.info_ast
+    | Default 
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été 
@@ -226,6 +231,8 @@ struct
     | Conditionnelle of expression * bloc * bloc
     | TantQue of expression * bloc
     | Empty (* les nœuds ayant disparus: Const *)
+    | Break
+    | Switch of expression * ((expression * bloc * instruction) list)
 
 
   (* Structure des fonctions dans notre langage *)

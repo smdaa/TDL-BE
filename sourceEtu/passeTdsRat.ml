@@ -99,6 +99,7 @@ let rec analyse_tds_expression tds e =
             | _ -> raise (MauvaiseUtilisationIdentifiant tid)
         end
     end
+  | AstSyntax.Default -> Default
     
 
 (* analyse_tds_instruction : AstSyntax.instruction -> tds -> AstTds.instruction *)
@@ -172,6 +173,11 @@ let rec analyse_tds_instruction tds i =
       let bast = analyse_tds_bloc tds b in
       (* Renvoie la nouvelle structure de la boucle *)
       TantQue (nc, bast)
+  | AstSyntax.Break -> Break
+  | AstSyntax.Notbreak -> Empty
+  | AstSyntax.Switch(e,lc) -> 
+    let ne = analyse_tds_expression tds e in
+    failwith "TODO"
 
       
 (* analyse_tds_bloc : AstSyntax.bloc -> AstTds.bloc *)
