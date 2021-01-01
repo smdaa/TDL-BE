@@ -7,6 +7,7 @@ struct
   open Exceptions
   open Ast
   open AstTds
+  (*open PrinterAstSyntax*)
 
 
   type t1 = Ast.AstSyntax.programme
@@ -176,8 +177,15 @@ let rec analyse_tds_instruction tds i =
   | AstSyntax.Break -> Break
   | AstSyntax.Notbreak -> Empty
   | AstSyntax.Switch(e,lc) -> 
+    let aux tds (e, b, i) = 
+      let ne = analyse_tds_expression tds e in 
+      let nb = analyse_tds_bloc tds b in 
+      let ni = analyse_tds_instruction tds i in 
+      ne,nb,ni 
+    in
     let ne = analyse_tds_expression tds e in
-    failwith "TODO"
+    let nlc = List.map (aux tds) lc in
+    Switch(ne,nlc)
 
       
 (* analyse_tds_bloc : AstSyntax.bloc -> AstTds.bloc *)
@@ -248,6 +256,7 @@ let analyser (AstSyntax.Programme (enumerations, fonctions, prog)) =
   let ne = List.map (analyse_tds_enumeration tds) enumerations in
   let nf = List.map (analyse_tds_fonction tds) fonctions in
   let nb = analyse_tds_bloc tds prog in
+  (*let () = print_programme (AstSyntax.Programme (enumerations, fonctions, prog)) in *)
   Programme (ne, nf, nb)
 
 end

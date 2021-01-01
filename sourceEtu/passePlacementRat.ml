@@ -1,4 +1,4 @@
-
+(*
 (* Module de la passe de placemment *)
 module PassePlacementRat : Passe.Passe with type t1 = Ast.AstType.programme and type t2 = Ast.AstPlacement.programme =
 struct
@@ -75,3 +75,4 @@ let analyser (AstType.Programme(enumerations, fonctions, prog)) =
   let _ = analyse_placement_bloc prog (get_nombre_enum enumerations) "SB" in
   Programme(enumerations, lf, prog)
 end
+*)

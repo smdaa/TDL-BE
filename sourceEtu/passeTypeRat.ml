@@ -98,6 +98,7 @@ let rec analyse_type_expression e =
       | InfoVar(_,t,_,_) -> (t, Tident n)
       | _ -> failwith "internal error"
     end
+  | AstTds.Default -> (Undefined, Default)
 
 
 (* analyse_type_instruction : AstTds.instruction -> AstType.instruction *)
@@ -151,6 +152,19 @@ let rec analyse_type_instruction i =
       | _ -> raise (TypeInattendu (tc, Bool))
     end
   | AstTds.Empty -> Empty
+  | AstTds.Break -> Break
+  | AstTds.Switch(e, lc) -> 
+    let aux t (e, b, i) =
+      let (te, ne) = analyse_type_expression e in 
+      if ((not (est_compatible t te)) && (te <> Undefined)) then raise (TypeInattendu(te, t)) 
+      else
+      let nb = analyse_type_bloc b in 
+      let ni = analyse_type_instruction i in 
+      (ne, nb, ni)
+    in
+    let (te, ne) = analyse_type_expression e in 
+    let nlc = List.map (aux te) lc in
+    Switch(ne, nlc)
 
 (* analyse_type_bloc : AstTds.bloc -> AstType.bloc *)
 (* Paramètre b : liste d'instructions à analyser *)

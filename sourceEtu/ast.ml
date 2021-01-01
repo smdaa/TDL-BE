@@ -150,11 +150,12 @@ struct
     | False -> "false "
     | Entier i -> (string_of_int i)^" "
     | Binaire (b,e1,e2) -> (string_of_expression e1)^(string_of_binaire b)^(string_of_expression e2)^" "
-    | Null -> "Null"
+    | Null -> "Null "
     | New t -> "new " ^ (string_of_type t) ^ " "
     | Affectable a -> (string_of_affectable a)^" "
     | Adresse n -> "adress " ^ n ^ " "
     | Tident n -> n ^ " "
+    | Default -> "default "
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
@@ -168,6 +169,9 @@ struct
                                   "ELSE \n"^((List.fold_right (fun i tq -> (string_of_instruction i)^tq) e ""))^"\n"
     | TantQue (c,b) -> "TantQue  : TQ "^(string_of_expression c)^"\n"^
                                   "FAIRE \n"^((List.fold_right (fun i tq -> (string_of_instruction i)^tq) b ""))^"\n"
+    | Break -> "break \n"
+    | Notbreak -> "\n"
+    | Switch(e, _) -> "Switch  : switch " ^ (string_of_expression e) ^ "\n" 
 
   (* Conversion des fonctions *)
   let string_of_fonction (Fonction(t,n,lp,li,e)) = (string_of_type t)^" "^n^" ("^((List.fold_right (fun (t,n) tq -> (string_of_type t)^" "^n^" "^tq) lp ""))^") = \n"^
@@ -277,6 +281,7 @@ type expression =
   | Affectable of affectable
   | Adresse of Tds.info_ast 
   | Tident of Tds.info_ast
+  | Default 
 
 
 (* instructions existantes Rat *)
@@ -292,6 +297,9 @@ type bloc = instruction list
   | Conditionnelle of expression * bloc * bloc
   | TantQue of expression * bloc
   | Empty (* les nœuds ayant disparus: Const *)
+  | Break
+  | Switch of expression * ((expression * bloc * instruction) list)
+
 
 (* nom, liste des paramètres, corps, expression de retour, informations associées à l'identificateur *)
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list * expression 

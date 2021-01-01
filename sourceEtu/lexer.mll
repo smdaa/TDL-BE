@@ -39,7 +39,7 @@ rule token = parse
 | "+"       {PLUS}
 | "*"       {MULT}
 | "<"       {INF}
-| "&"       {AMV} (* adresse memoire d'une variable *)
+| "&"       {AMV} 
 | "null"    {NULL}
 | "new"     {NEW}
 | "enum"    {ENUMERATION}
