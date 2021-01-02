@@ -1,4 +1,4 @@
-(*
+
 open Compilateur
 open PasseTdsRat
 open PasseTypeRat
@@ -221,5 +221,15 @@ let%test "test6_z1" =
 
   let%test "testenum2" = 
     test "../../fichiersRat/src-rat-placement-test/testEnum1.rat"  "main" ("y",1)  (20, "SB")
+
+  let%test "testcase1" = 
+    test "../../fichiersRat/src-rat-placement-test/testCase1.rat"  "main" ("y",1)  (1, "SB")
   
-*)
+  let%test "testcase2" = 
+    test "../../fichiersRat/src-rat-placement-test/testCase1.rat"  "main" ("x",1)  (0, "SB")
+
+  let%test "testcase3" = 
+    test "../../fichiersRat/src-rat-placement-test/testCase1.rat"  "main" ("l",1)  (2, "SB")
+
+  let%test "testcase4" = 
+    test "../../fichiersRat/src-rat-placement-test/testCase1.rat"  "main" ("m",1)  (3, "SB")

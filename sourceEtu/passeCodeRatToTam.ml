@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de génération de code *)
 module PasseCodeRatToTam : Passe.Passe with type t1 = Ast.AstPlacement.programme and type t2 = string =
 struct
@@ -89,6 +89,7 @@ let rec analyse_code_expression e =
       | InfoVar (_, t, dep, reg) -> ("LOAD (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n")
       | _ -> failwith "erreur interne"
     end
+  | Default -> "\n"
 
               
 
@@ -129,7 +130,42 @@ let rec analyse_code_instruction i =
     (analyse_code_bloc b) ^
     "JUMP " ^ label_debut ^ "\n" ^
     label_fin^"\n"
-  | Empty -> ""
+  | Break -> "\n"
+  | Switch (e,lc) -> 
+    let aux0 e =
+      begin
+        match e with 
+        | True | False -> EquBool
+        | Entier _ -> EquInt
+        | Tident _ -> EquEnum
+        | Default -> MultRat
+        | _ -> failwith "internal errorr"
+      end
+    in
+    let aux l e1 (e, b, i) = 
+      let bin = aux0 e in   
+      let label_next = getEtiquette() in
+      if not(bin = MultRat) then
+        match i with 
+        | Empty -> 
+          (analyse_code_expression (Binaire(bin,e1, e))) ^
+          "JUMPIF (0) " ^ label_next ^ "\n" ^
+          (analyse_code_bloc b) ^
+          label_next ^ "\n"
+        | Break -> 
+          (analyse_code_expression (Binaire(bin,e1, e))) ^
+          "JUMPIF (0) " ^ label_next ^ "\n" ^
+          (analyse_code_bloc b) ^
+          "JUMP " ^ l ^ "\n" ^
+          label_next ^ "\n"
+        | _ -> failwith "internal error"
+      else 
+        (analyse_code_bloc b) ^
+        "JUMP " ^ l ^ "\n"
+    in 
+    let label_end_case = getEtiquette() in
+    String.concat "" (List.map (aux label_end_case e) lc) ^ "\n" ^ label_end_case ^ "\n"
+  | Empty -> "\n"
 
 and analyse_code_bloc b =
   let taille = List.fold_right (fun i ti -> (taille_variables_declarees i) + ti) b 0 in
@@ -175,4 +211,3 @@ let analyser (AstPlacement.Programme(enumerations,fonctions, bloc)) =
   "HALT\n"
 
 end
-*)

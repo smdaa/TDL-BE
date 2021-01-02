@@ -1,4 +1,4 @@
-(*
+
 (* Module de la passe de placemment *)
 module PassePlacementRat : Passe.Passe with type t1 = Ast.AstType.programme and type t2 = Ast.AstPlacement.programme =
 struct
@@ -28,6 +28,12 @@ let rec analyse_placement_instruction i base reg =
     analyse_placement_bloc e base reg;
     0
   | AstType.TantQue (_, b) -> analyse_placement_bloc b base reg; 0
+  | AstType.Switch(_, lc) -> 
+    let aux (_, b, _) = 
+      analyse_placement_bloc b base reg;
+    in 
+    let _ = List.map (aux) lc in
+    0
   | _ -> 0
 
 and analyse_placement_bloc li base reg = 
@@ -75,4 +81,3 @@ let analyser (AstType.Programme(enumerations, fonctions, prog)) =
   let _ = analyse_placement_bloc prog (get_nombre_enum enumerations) "SB" in
   Programme(enumerations, lf, prog)
 end
-*)

@@ -1,4 +1,4 @@
-(*
+
 open Compilateur
 
 (* Changer le chemin d'accès du jar. *)
@@ -135,4 +135,31 @@ let%expect_test "enum3" =
   runtam "../../fichiersRat/src-rat-tam-test/enum3.rat";
   [%expect{| falsetrue |}]
 
-*)
+let%expect_test "case1" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case1.rat";
+  [%expect{| 910 |}]
+
+let%expect_test "case2" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case2.rat";
+  [%expect{| 78 |}]
+
+let%expect_test "case3" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case3.rat";
+  [%expect{| 3 |}]
+
+let%expect_test "case4" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case4.rat";
+  [%expect{| 7 |}]
+
+let%expect_test "case5" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case5.rat";
+  [%expect{| 2096 |}]
+
+let%expect_test "case6" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case6.rat";
+  [%expect{| 96 |}]
+
+let%expect_test "case7" = 
+  runtam "../../fichiersRat/src-rat-tam-test/case7.rat";
+  [%expect{| 4278 |}]
+

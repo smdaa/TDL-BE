@@ -1,0 +1,16 @@
+
+main{
+  int x = 0;
+  int y = 1;
+  switch ((x + y)){
+	case 4 :
+		int z = (x + 1);
+	case 5 :
+		int i = 7;
+		int g = 9;
+	default :
+		print true;
+  }
+  int l = 2;
+  int m = 3;
+}
