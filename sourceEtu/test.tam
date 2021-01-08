@@ -83,20 +83,23 @@ JUMPIF (0) label2
 LOADL 42
 SUBR IOut
 POP (0) 0
+JUMP label3
 label2
 LOAD (1) 0[SB]
 LOADL 2
 SUBR IEq
-JUMPIF (0) label3
+JUMPIF (0) label4
+label5
 LOADL 78
 SUBR IOut
 POP (0) 0
 JUMP label1
-label3
+label4
 LOAD (1) 0[SB]
 LOADL 3
 SUBR IEq
-JUMPIF (0) label4
+JUMPIF (0) label6
+label7
 PUSH 1
 LOADL 3
 STORE (1) 1[SB]
@@ -104,11 +107,12 @@ LOAD (1) 1[SB]
 SUBR IOut
 POP (0) 1
 JUMP label1
-label4
+label6
 LOAD (1) 0[SB]
 LOADL 4
 SUBR IEq
-JUMPIF (0) label5
+JUMPIF (0) label8
+label9
 PUSH 1
 LOADL 3
 STORE (1) 1[SB]
@@ -118,15 +122,16 @@ SUBR IAdd
 SUBR IOut
 POP (0) 1
 JUMP label1
-label5
+label8
 LOAD (1) 0[SB]
 LOADL 5
 SUBR IEq
-JUMPIF (0) label6
+JUMPIF (0) label10
 LOADL 20
 SUBR IOut
 POP (0) 0
-label6
+JUMP label11
+label10
 LOADL 96
 SUBR IOut
 POP (0) 0

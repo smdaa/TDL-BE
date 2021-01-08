@@ -90,9 +90,7 @@ let rec analyse_code_expression e =
       | _ -> failwith "erreur interne"
     end
   | Default -> "\n"
-
-              
-
+   
 let rec analyse_code_instruction i =
   match i with 
   | Declaration (e, info) ->
@@ -132,39 +130,47 @@ let rec analyse_code_instruction i =
     label_fin^"\n"
   | Break -> "\n"
   | Switch (e,lc) -> 
-    let aux0 e =
-      begin
-        match e with 
+    let aux l (_, b, i) = 
+      let label = getEtiquette() in
+      match i with 
+      | Break -> 
+        label ^ "\n" ^
+        (analyse_code_bloc b) ^
+        "JUMP " ^ l ^ "\n" 
+      | Empty -> 
+        label ^ "\n" ^
+        (analyse_code_bloc b) 
+      | _ -> failwith "internal error"
+    in 
+    let aux1 e = 
+      match e with 
         | True | False -> EquBool
         | Entier _ -> EquInt
         | Tident _ -> EquEnum
         | Default -> MultRat
-        | _ -> failwith "internal errorr"
-      end
-    in
-    let aux l e1 (e, b, i) = 
-      let bin = aux0 e in   
-      let label_next = getEtiquette() in
-      if not(bin = MultRat) then
-        match i with 
-        | Empty -> 
-          (analyse_code_expression (Binaire(bin,e1, e))) ^
-          "JUMPIF (0) " ^ label_next ^ "\n" ^
-          (analyse_code_bloc b) ^
-          label_next ^ "\n"
-        | Break -> 
-          (analyse_code_expression (Binaire(bin,e1, e))) ^
-          "JUMPIF (0) " ^ label_next ^ "\n" ^
-          (analyse_code_bloc b) ^
-          "JUMP " ^ l ^ "\n" ^
-          label_next ^ "\n"
         | _ -> failwith "internal error"
-      else 
-        (analyse_code_bloc b) ^
-        "JUMP " ^ l ^ "\n"
-    in 
-    let label_end_case = getEtiquette() in
-    String.concat "" (List.map (aux label_end_case e) lc) ^ "\n" ^ label_end_case ^ "\n"
+    in
+    begin
+      match lc with 
+      | [] -> "\n"
+      | (e1, b1, _)::t -> 
+        let label_end_switch = getEtiquette() in
+        let label_ok = getEtiquette() in
+        let label_ko = getEtiquette() in
+        let bin = aux1 e1 in
+        if not(bin = MultRat) then
+          (analyse_code_expression (Binaire(bin, e, e1))) ^
+          "JUMPIF (0) " ^ label_ko ^ "\n" ^
+          String.concat "" (List.map (aux label_end_switch) lc) ^ "\n" ^
+          "JUMP " ^ label_ok ^ "\n" ^
+          label_ko ^ "\n" ^
+          (analyse_code_instruction (Switch (e, t))) 
+          ^ label_ok ^ "\n" ^
+          "\n" ^ label_end_switch ^ "\n"
+        else 
+          (analyse_code_bloc b1) ^
+          "\n" ^ label_end_switch ^ "\n"
+    end
   | Empty -> "\n"
 
 and analyse_code_bloc b =

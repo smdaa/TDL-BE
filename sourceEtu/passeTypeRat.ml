@@ -12,6 +12,7 @@ struct
   type t1 = Ast.AstTds.programme
   type t2 = Ast.AstType.programme
 
+
 (* analyse_type_affectable : AstTds.affectable -> typ * AstType.affectable *)
 (* Paramètre a : l'affectable à analyser *)
 (* Retourne le type de l'affectable  *)
@@ -30,6 +31,7 @@ let rec analyse_type_affectable a =
       | (Pointeur tp, na) -> (tp, Valeur na)
       | _ -> failwith "internal error"
     end
+
 
 (* analyse_type_expression : AstTds.expression -> typ * AstType.expression *)
 (* Paramètre e : l'expression à analyser *)
@@ -154,8 +156,13 @@ let rec analyse_type_instruction i =
   | AstTds.Empty -> Empty
   | AstTds.Break -> Break
   | AstTds.Switch(e, lc) -> 
+    (* fonction auxiliere : type -> AstTds.expression * AstTds.bloc * AstTds.instruction -> AstType.expression * AstType.bloc * AstType.instruction *)
+    (* Paramètre type : type de l'expression en switch(e) *)
+    (* Paramètre AstTds.expression * AstTds.bloc * AstTds.instruction : expression, bloc code, instruction (break ou empty) associé a un cas *)
+    (* Vérifie la bonne utilisation des types *)
     let aux t (e, b, i) =
       let (te, ne) = analyse_type_expression e in 
+      (* si te = Undefined donc e = default *)
       if ((not (est_compatible t te)) && (te <> Undefined)) then raise (TypeInattendu(te, t)) 
       else
       let nb = analyse_type_bloc b in 
@@ -165,6 +172,7 @@ let rec analyse_type_instruction i =
     let (te, ne) = analyse_type_expression e in 
     let nlc = List.map (aux te) lc in
     Switch(ne, nlc)
+
 
 (* analyse_type_bloc : AstTds.bloc -> AstType.bloc *)
 (* Paramètre b : liste d'instructions à analyser *)
@@ -187,7 +195,12 @@ let analyse_type_fonction (AstTds.Fonction(t, info, lp, li, e))=
     Fonction(info, info_lp, nli, ne)
   else raise (TypeInattendu (te, t))
 
+
+(* analyse_type_enumeration : AstTds.enumeration -> AstType.enumeration *)
+(* Paramètre : l'enumeration à transformer *)
+(* tranforme l'enumeration en une enumeration de type AstType.enumeration *)
 let analyse_type_enumeration (AstTds.Enumeration(n, ln)) = Enumeration(n, ln)
+
 
 (* analyser : AstTds.ast -> AstType.ast *)
 (* Paramètre : le programme à analyser *)

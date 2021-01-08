@@ -205,7 +205,7 @@ and analyse_tds_bloc tds li =
    nli
 
 
-(* analyse_tds_fonction : AstSyntax.fonction -> AstTds.fonction *)
+(* analyse_tds_fonction : AstSyntax.fonction -> tds -> AstTds.fonction *)
 (* Paramètre tds : la table des symboles courante *)
 (* Paramètre : la fonction à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme la fonction
@@ -229,7 +229,20 @@ let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li,e))  =
     let ne = analyse_tds_expression tdslocal e in
     Fonction (t, info, nlp, nli, ne)
   
+
+(* analyse_tds_enumeration : AstSyntax.enumeration -> tds -> AstTds.enumeration *)
+(* Paramètre tds : la table des symboles courante *)
+(* Paramètre : enumeration à analyser *)
+(* Vérifie la bonne utilisation des enumeration et tranforme l'enumeration
+en une enumeration de type AstTds.enumeration *)
+(* Erreur si mauvaise utilisation des identifiants *)
 let analyse_tds_enumeration maintds (AstSyntax.Enumeration(n, ln)) = 
+  (* fonction auxiliere : tds -> string -> info_ast*)
+  (* Paramètre tds : la table des symboles courante *)
+  (* Paramètre x : le nom de la valeur de type enumeration a analyser *)
+  (* Vérifie la bonne utilisation d'une valeur de type enumeration et la tranforme
+  en une info_ast *)
+  (* Erreur si mauvaise utilisation des identifiants *)  
   let aux tds x =
     match chercherGlobalement tds x with 
       | Some _ -> raise (DoubleDeclaration x)
@@ -245,7 +258,6 @@ let analyse_tds_enumeration maintds (AstSyntax.Enumeration(n, ln)) =
     Enumeration(info, info_l)
 
 
-
 (* analyser : AstSyntax.ast -> AstTds.ast *)
 (* Paramètre : le programme à analyser *)
 (* Vérifie la bonne utilisation des identifiants et tranforme le programme
@@ -256,7 +268,5 @@ let analyser (AstSyntax.Programme (enumerations, fonctions, prog)) =
   let ne = List.map (analyse_tds_enumeration tds) enumerations in
   let nf = List.map (analyse_tds_fonction tds) fonctions in
   let nb = analyse_tds_bloc tds prog in
-  (*let () = print_programme (AstSyntax.Programme (enumerations, fonctions, prog)) in *)
   Programme (ne, nf, nb)
-
 end
