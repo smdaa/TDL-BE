@@ -501,6 +501,23 @@ let%test_unit "testenum5" =
   with 
   | TypeInattendu(_, _) -> ()
 
+let%test_unit "testcase1" =
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testCase1.rat" in raise ErreurNonDetectee
+  with 
+  | TypeInattendu(_, _) -> ()
+
+let%test_unit "testcase2" =
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testCase2.rat" in raise ErreurNonDetectee
+  with 
+  | TypeInattendu(_, _) -> ()
+
+let%test_unit "testcase3" =
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testCase3.rat" in raise ErreurNonDetectee
+  with 
+  | TypeInattendu(_, _) -> ()
 
 (* Fichiers de tests de la génération de code -> doivent passer le typage *)
 

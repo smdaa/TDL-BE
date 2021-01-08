@@ -300,15 +300,12 @@ let%test_unit "testpointeur3" =
   with
   | IdentifiantNonDeclare("px") -> ()
 
-
 let%test_unit "testpointeur4" = 
   try
     let _ = compiler "../../fichiersRat/src-rat-tds-test/testPointeur4.rat" 
     in raise ErreurNonDetectee
   with
   | MauvaiseUtilisationIdentifiant("plus1") -> ()
-
-
 
 let%test_unit "testenum1" = 
   try
@@ -324,10 +321,28 @@ let%test_unit "testenum2" =
   with
   | IdentifiantNonDeclare("Lundi") -> ()
 
-
 let%test_unit "testenum3" = 
   let _ = compiler "../../fichiersRat/src-rat-tds-test/testEnum3.rat" in ()
 
+let%test_unit "testcase1" = 
+  let _ = compiler "../../fichiersRat/src-rat-tds-test/testCase1.rat" in ()
+
+let%test_unit "testcase2" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testCase2.rat" 
+    in raise ErreurNonDetectee
+  with 
+   | IdentifiantNonDeclare("q") -> ()
+
+let%test_unit "testcase3" = 
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testCase3.rat" in ()
+
+let%test_unit "testcase4" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testCase4.rat" 
+    in raise ErreurNonDetectee
+  with
+    | IdentifiantNonDeclare("Lundi") -> ()
 
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 

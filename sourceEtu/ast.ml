@@ -52,6 +52,7 @@ type affectable =
   (* Accès à la valeur d'un pointeur *)
   | Valeur of affectable
 
+(* Enumeration représenté par le nom de l'énumeration et la liste des valeurs *)
 type enumeration = Enumeration of string * string list
 
 (* Expressions de Rat *)
@@ -80,7 +81,10 @@ type expression =
   | New of typ
   (* Accès à l'adress d'une variable *)
   | Adresse  of string
+  (* Accès à la valeur d'un type enumeration *)
   | Tident of string
+  (* expression default utilisé en switch case *)
+  | Default 
 
 (* Instructions de Rat *)
 type bloc = instruction list
@@ -97,6 +101,12 @@ and instruction =
   | Conditionnelle of expression * bloc * bloc
   (*Boucle TantQue représentée par la conditin d'arrêt de la boucle et le bloc d'instructions *)
   | TantQue of expression * bloc
+  (* instruction break utilisé en switch case a la fin du code bloc pour un cas *)
+  | Break
+  (* abscence de l'instruction break utilisé en switch case a la fin du code bloc pour un cas *)
+  | Notbreak
+  (* switch/case représentée par l'expression qu'on test et une list des triple expression : (case expression) bloc : bloc du code, instruction : Break | Notbreak*)
+  | Switch of expression * ((expression * bloc * instruction) list)
 
 (* Structure des fonctions de Rat *)
 (* type de retour - nom - liste des paramètres (association type et nom) - corps de la fonction - expression de retour *)
@@ -126,14 +136,17 @@ struct
     | Equ -> "= "
     | Inf -> "< "
 
+  (* Conversion des affectables *)
   let rec string_of_affectable a =
     match a with 
     | Valeur a -> "valeur de " ^ string_of_affectable a
     | Ident n -> n ^ ""
 
+  (* Conversion des enumerations *)
   let string_of_enumeration en = 
-    let Enumeration(n, _) = en in 
-    "enumeration " ^ n ^ " : \n" 
+    let Enumeration(n, lv) = en in 
+    "enumeration " ^ n ^ " : \n" ^
+    List.fold_right (fun h t -> h ^ " " ^ t) lv ""
 
   (* Conversion des expressions *)
   let rec string_of_expression e =
@@ -146,11 +159,12 @@ struct
     | False -> "false "
     | Entier i -> (string_of_int i)^" "
     | Binaire (b,e1,e2) -> (string_of_expression e1)^(string_of_binaire b)^(string_of_expression e2)^" "
-    | Null -> "Null"
+    | Null -> "Null "
     | New t -> "new " ^ (string_of_type t) ^ " "
-    | Affectable a -> (string_of_affectable a)^" "
+    | Affectable a -> (string_of_affectable a) ^ " "
     | Adresse n -> "adress " ^ n ^ " "
     | Tident n -> n ^ " "
+    | Default -> "default "
 
   (* Conversion des instructions *)
   let rec string_of_instruction i =
@@ -164,6 +178,9 @@ struct
                                   "ELSE \n"^((List.fold_right (fun i tq -> (string_of_instruction i)^tq) e ""))^"\n"
     | TantQue (c,b) -> "TantQue  : TQ "^(string_of_expression c)^"\n"^
                                   "FAIRE \n"^((List.fold_right (fun i tq -> (string_of_instruction i)^tq) b ""))^"\n"
+    | Break -> "break \n"
+    | Notbreak -> "\n"
+    | Switch(e, _) -> "Switch  : switch " ^ (string_of_expression e) ^ "\n" 
 
   (* Conversion des fonctions *)
   let string_of_fonction (Fonction(t,n,lp,li,e)) = (string_of_type t)^" "^n^" ("^((List.fold_right (fun (t,n) tq -> (string_of_type t)^" "^n^" "^tq) lp ""))^") = \n"^
@@ -213,6 +230,7 @@ struct
     | Affectable of affectable
     | Adresse of Tds.info_ast (* le nom de l'identifiant est remplacé par ses informations *)
     | Tident of Tds.info_ast
+    | Default 
 
   (* instructions existantes dans notre langage *)
   (* ~ instruction de l'AST syntaxique où les noms des identifiants ont été 
@@ -226,6 +244,8 @@ struct
     | Conditionnelle of expression * bloc * bloc
     | TantQue of expression * bloc
     | Empty (* les nœuds ayant disparus: Const *)
+    | Break
+    | Switch of expression * ((expression * bloc * instruction) list)
 
 
   (* Structure des fonctions dans notre langage *)
@@ -270,6 +290,7 @@ type expression =
   | Affectable of affectable
   | Adresse of Tds.info_ast 
   | Tident of Tds.info_ast
+  | Default 
 
 
 (* instructions existantes Rat *)
@@ -284,7 +305,10 @@ type bloc = instruction list
   | AffichageBool of expression
   | Conditionnelle of expression * bloc * bloc
   | TantQue of expression * bloc
-  | Empty (* les nœuds ayant disparus: Const *)
+  | Empty (* les noeuds ayant disparus: Const *)
+  | Break
+  | Switch of expression * ((expression * bloc * instruction) list)
+
 
 (* nom, liste des paramètres, corps, expression de retour, informations associées à l'identificateur *)
 type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list * expression 
@@ -329,4 +353,3 @@ type fonction = Fonction of Tds.info_ast * Tds.info_ast list * instruction list 
 type programme = Programme of AstType.enumeration list * fonction list * bloc
 
 end
-

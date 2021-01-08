@@ -1,4 +1,4 @@
-; fichiersRat/src-rat-tam-test/pointeur1.rat
+; fichiersRat/src-rat-tam-test/case2.rat
 JUMP main
 
 pgcd
@@ -72,26 +72,72 @@ RETURN (2) 4
 
 
 main
+
 PUSH 1
-LOADL 1
-SUBR MAlloc
+LOADL 2
 STORE (1) 0[SB]
-LOADL 3
 LOAD (1) 0[SB]
-STOREI (1)
-PUSH 1
-LOADL 18
-STORE (1) 1[SB]
-PUSH 1
-LOADA 1 [SB]
-STORE (1) 2[SB]
-LOAD (1) 0[SB]
-LOADI (1)
-LOAD (1) 2[SB]
-STOREI (1)
-LOAD (1) 2[SB]
-LOADI (1)
+LOADL 1
+SUBR IEq
+JUMPIF (0) label2
+LOADL 42
 SUBR IOut
-POP (0) 3
+POP (0) 0
+JUMP label3
+label2
+LOAD (1) 0[SB]
+LOADL 2
+SUBR IEq
+JUMPIF (0) label4
+label5
+LOADL 78
+SUBR IOut
+POP (0) 0
+JUMP label1
+label4
+LOAD (1) 0[SB]
+LOADL 3
+SUBR IEq
+JUMPIF (0) label6
+label7
+PUSH 1
+LOADL 3
+STORE (1) 1[SB]
+LOAD (1) 1[SB]
+SUBR IOut
+POP (0) 1
+JUMP label1
+label6
+LOAD (1) 0[SB]
+LOADL 4
+SUBR IEq
+JUMPIF (0) label8
+label9
+PUSH 1
+LOADL 3
+STORE (1) 1[SB]
+LOAD (1) 1[SB]
+LOAD (1) 0[SB]
+SUBR IAdd
+SUBR IOut
+POP (0) 1
+JUMP label1
+label8
+LOAD (1) 0[SB]
+LOADL 5
+SUBR IEq
+JUMPIF (0) label10
+LOADL 20
+SUBR IOut
+POP (0) 0
+JUMP label11
+label10
+LOADL 96
+SUBR IOut
+POP (0) 0
+JUMP label1
+
+label1
+POP (0) 1
 
 HALT

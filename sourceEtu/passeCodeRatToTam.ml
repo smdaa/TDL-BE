@@ -89,9 +89,8 @@ let rec analyse_code_expression e =
       | InfoVar (_, t, dep, reg) -> ("LOAD (" ^ (string_of_int (getTaille t)) ^ ") " ^ (string_of_int dep) ^ "[" ^ reg ^ "]\n")
       | _ -> failwith "erreur interne"
     end
-
-              
-
+  | Default -> "\n"
+   
 let rec analyse_code_instruction i =
   match i with 
   | Declaration (e, info) ->
@@ -129,7 +128,50 @@ let rec analyse_code_instruction i =
     (analyse_code_bloc b) ^
     "JUMP " ^ label_debut ^ "\n" ^
     label_fin^"\n"
-  | Empty -> ""
+  | Break -> "\n"
+  | Switch (e,lc) -> 
+    let aux l (_, b, i) = 
+      let label = getEtiquette() in
+      match i with 
+      | Break -> 
+        label ^ "\n" ^
+        (analyse_code_bloc b) ^
+        "JUMP " ^ l ^ "\n" 
+      | Empty -> 
+        label ^ "\n" ^
+        (analyse_code_bloc b) 
+      | _ -> failwith "internal error"
+    in 
+    let aux1 e = 
+      match e with 
+        | True | False -> EquBool
+        | Entier _ -> EquInt
+        | Tident _ -> EquEnum
+        | Default -> MultRat
+        | _ -> failwith "internal error"
+    in
+    begin
+      match lc with 
+      | [] -> "\n"
+      | (e1, b1, _)::t -> 
+        let label_end_switch = getEtiquette() in
+        let label_ok = getEtiquette() in
+        let label_ko = getEtiquette() in
+        let bin = aux1 e1 in
+        if not(bin = MultRat) then
+          (analyse_code_expression (Binaire(bin, e, e1))) ^
+          "JUMPIF (0) " ^ label_ko ^ "\n" ^
+          String.concat "" (List.map (aux label_end_switch) lc) ^ "\n" ^
+          "JUMP " ^ label_ok ^ "\n" ^
+          label_ko ^ "\n" ^
+          (analyse_code_instruction (Switch (e, t))) 
+          ^ label_ok ^ "\n" ^
+          "\n" ^ label_end_switch ^ "\n"
+        else 
+          (analyse_code_bloc b1) ^
+          "\n" ^ label_end_switch ^ "\n"
+    end
+  | Empty -> "\n"
 
 and analyse_code_bloc b =
   let taille = List.fold_right (fun i ti -> (taille_variables_declarees i) + ti) b 0 in
@@ -175,4 +217,3 @@ let analyser (AstPlacement.Programme(enumerations,fonctions, bloc)) =
   "HALT\n"
 
 end
-

@@ -1,0 +1,13 @@
+
+test{
+  int z = 8;
+  switch (z) {
+	case 7 :
+		print z;
+	case 8 :
+		print (z + 1);
+	default :
+		print (z + 2);
+		break;
+  }
+}

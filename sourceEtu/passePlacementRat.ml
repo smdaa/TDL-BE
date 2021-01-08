@@ -12,22 +12,33 @@ struct
   type t1 = Ast.AstType.programme
   type t2 = Ast.AstPlacement.programme
 
+
+(* analyse_placement_instruction : AstType.instruction -> int -> string -> int *)
+(* Paramètre i : l'instruction à analyser *)
+(*  *)
 let rec analyse_placement_instruction i base reg =
   match i with 
   | AstType.Declaration (_, info) -> 
     begin
-    match info_ast_to_info info with 
-    | InfoVar(_, t, _, _) -> 
-      modifier_adresse_info base reg info;
-      (*let () = printf "%s adresse %d SB \n" n (base) in *)
-      getTaille t 
-    | _ -> failwith "erreur interne"
+      match info_ast_to_info info with 
+      | InfoVar(_, t, _, _) -> 
+        modifier_adresse_info base reg info;
+        (*let () = printf "%s adresse %d SB \n" n (base) in *)
+        getTaille t 
+      | _ -> failwith "internal error"
     end
   | AstType.Conditionnelle (_, t, e) ->
     analyse_placement_bloc t base reg;
     analyse_placement_bloc e base reg;
     0
-  | AstType.TantQue (_, b) -> analyse_placement_bloc b base reg; 0
+  | AstType.TantQue (_, b) -> analyse_placement_bloc b base reg; 
+    0
+  | AstType.Switch(_, lc) -> 
+    let aux (_, b, _) = 
+      analyse_placement_bloc b base reg;
+    in 
+    let _ = List.map (aux) lc in
+    0
   | _ -> 0
 
 and analyse_placement_bloc li base reg = 

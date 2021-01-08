@@ -1,0 +1,15 @@
+
+test{
+  int x = 3;
+  int y = 4;
+  int z = (x + y);
+  switch (q) {
+	case 7 :
+		print z;
+	case 8 :
+		print (z + 1);
+	default :
+		print x;
+		break;
+  }
+}
