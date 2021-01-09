@@ -1,5 +1,11 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{}%
 \contentsline {section}{\numberline {2}Pointeurs}{3}{}%
+\contentsline {subsection}{\numberline {2.1}Modifications de la grammaire}{3}{}%
+\contentsline {subsection}{\numberline {2.2}Jugement de typage}{3}{}%
 \contentsline {section}{\numberline {3}Surcharge des fonctions}{3}{}%
 \contentsline {section}{\numberline {4}Types énumérés}{3}{}%
-\contentsline {section}{\numberline {5}Switch/case}{3}{}%
+\contentsline {subsection}{\numberline {4.1}Modifications de la grammaire}{3}{}%
+\contentsline {subsection}{\numberline {4.2}Jugement de typage}{4}{}%
+\contentsline {section}{\numberline {5}Switch/case}{4}{}%
+\contentsline {subsection}{\numberline {5.1}Modifications de la grammaire}{4}{}%
+\contentsline {subsection}{\numberline {5.2}Jugement de typage}{4}{}%

@@ -38,8 +38,71 @@ constructions
     \item switch/case
 \end{itemize}
 \section{Pointeurs}
+\subsection{Modifications de la grammaire}
+On ajoute les règles suivantes :
+\begin{itemize}
+    \item TYPE $\rightarrow$ TYPE *
+    \item E $\rightarrow$ A
+    \item A $\rightarrow$ * A
+    \item A $\rightarrow$ id
+    \item E $\rightarrow$ null
+    \item E $\rightarrow$ new TYPE
+    \item E $\rightarrow$ \& id
+    \item I $\rightarrow$ A = E
+\end{itemize}
+Afin de traiter l'extension des pointeurs on doit ajouter un nouveau type dans \textbf{type.ml} : Pointeur of typ,
+un pointeur sur null a un type de Pointeur(Undefined)
+\subsection{Jugement de typage}
+\begin{equation}
+    \frac{\sigma \vdash a : Pointeur(\tau)}{\sigma \vdash * a : \tau}
+\end{equation}
+\begin{equation}
+    \frac{\sigma \vdash a :\tau}{\sigma \vdash \& a : Pointeur(\tau)}
+\end{equation}
+\begin{equation}
+    \sigma \vdash null : Pointeur(Undefined)
+\end{equation}
+\begin{equation}
+    \frac{\sigma \vdash a :\tau}{\sigma \vdash new a : Pointeur(\tau)}
+\end{equation}
 \section{Surcharge des fonctions}
 \section{Types énumérés}
+\subsection{Modifications de la grammaire}
+On ajoute les règles suivantes :
+\begin{itemize}
+    \item Main $\rightarrow$ ENUMS PROG
+    \item ENUMS $\rightarrow$ $\Lambda$
+    \item ENUMS $\rightarrow$ ENUM ENUMS
+    \item ENUM $\rightarrow$ enum tid {IDS}
+    \item IDS $\rightarrow$ tid
+    \item IDS $\rightarrow$ tid, IDS
+    \item TYPE $\rightarrow$ tid
+    \item E $\rightarrow$ tid
+\end{itemize}
+\subsection{Jugement de typage}
+\begin{equation}
+    \frac{\sigma \vdash E_1 : Enum(n), \sigma \vdash E_2 : Enum(n)}{\sigma \vdash (E_1=E_2) : bool}
+\end{equation}
+
 \section{Switch/case}
+\subsection{Modifications de la grammaire}
+On ajoute les règles suivantes :
+\begin{itemize}
+    \item I $\rightarrow$ switch (E) {LCase}
+    \item LCase $\rightarrow$ Case LCase
+    \item LCase $\rightarrow$ $\Lambda$
+    \item Case $\rightarrow$ case tid : IS B
+    \item Case $\rightarrow$ case entier : IS B
+    \item Case $\rightarrow$ case true : IS B
+    \item Case $\rightarrow$ case false : IS B
+    \item Case $\rightarrow$ default : IS B
+    \item B $\rightarrow$ $\Lambda$
+    \item B $\rightarrow$ break;
+\end{itemize}
+\subsection{Jugement de typage}
+\begin{equation}
+    \frac{\sigma \vdash E : \tau, \sigma \vdash E_1 : \tau, \sigma \vdash Bloc_1: void, \sigma \vdash default : Undefined, \sigma \vdash Bloc_3 : void}
+        {\sigma \vdash switch (E) case E_1 Bloc_1 ... default Bloc_3 : void,[]}
+\end{equation}
 
 \end{document}

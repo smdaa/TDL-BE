@@ -15,6 +15,7 @@ let rec est_compatible t1 t2 =
   | Bool, Bool -> true
   | Int, Int -> true
   | Rat, Rat -> true
+  | Undefined, Undefined -> true
   | Pointeur t1, Pointeur t2 -> est_compatible t1 t2
   | Enum en1, Enum en2 -> en1=en2
   | _ -> false 
