@@ -205,7 +205,7 @@ let analyse_type_enumeration (AstTds.Enumeration(n, ln)) = Enumeration(n, ln)
 (* analyser : AstTds.ast -> AstType.ast *)
 (* Paramètre : le programme à analyser *)
 (* Vérifie la bonne utilisation des types et tranforme le programme
-en un programme de type AstType.fonction *)
+en un programme de type AstType.programme *)
 (* Erreur si mauvaise utilisation des types *)
 let analyser (AstTds.Programme (enumerations,fonctions, prog)) = 
   let ne = List.map (analyse_type_enumeration) enumerations in 

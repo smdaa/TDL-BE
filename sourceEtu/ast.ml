@@ -4,8 +4,10 @@ open Type
 module type Ast =
 sig
    type expression
+   type affectable
    type instruction
    type fonction
+   type enumeration
    type programme
 end
 
@@ -115,9 +117,6 @@ type fonction = Fonction of typ * string * (typ * string) list * instruction lis
 (* Structure d'un programme Rat *)
 (* liste de fonction - programme principal *)
 type programme = Programme of enumeration list * fonction list * bloc
-
-
-
 end
 
 

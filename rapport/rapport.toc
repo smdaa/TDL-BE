@@ -1,0 +1,5 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{}%
+\contentsline {section}{\numberline {2}Pointeurs}{3}{}%
+\contentsline {section}{\numberline {3}Surcharge des fonctions}{3}{}%
+\contentsline {section}{\numberline {4}Types énumérés}{3}{}%
+\contentsline {section}{\numberline {5}Switch/case}{3}{}%
