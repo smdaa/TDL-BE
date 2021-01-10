@@ -1,10 +1,11 @@
 # - [x] Pointeurs
 
-# La surcharge de fonctions
-TODO
+# - [x] surcharge de fonctions
 
 # - [x] Les types énumérés
 
-# - [x] La structure de contrˆole switch/case
+# - [x] La structure de controle switch/case
 
+# Rapport 
+TODO
 
