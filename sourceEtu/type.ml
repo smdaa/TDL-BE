@@ -6,8 +6,8 @@ let rec string_of_type t =
   | Int  ->  "Int"
   | Rat  ->  "Rat"
   | Undefined -> "Undefined"
-  | Pointeur t -> "Pointeur sur " ^ (string_of_type t)
-  | Enum t -> "Enumeration de " ^ t
+  | Pointeur t -> "Pointeursur" ^ (string_of_type t)
+  | Enum t -> "Enumerationde" ^ t
 
 
 let rec est_compatible t1 t2 =

@@ -519,6 +519,16 @@ let%test_unit "testcase3" =
   with 
   | TypeInattendu(_, _) -> ()
 
+let%test_unit "testsurcharge1" = 
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testSurcharge1.rat" in ()
+
+let%test_unit "testsurcharge2" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-type-test/testSurcharge2.rat" 
+    in raise ErreurNonDetectee
+  with
+    | TypesParametresInattendus(_, _) -> ()
+
 (* Fichiers de tests de la génération de code -> doivent passer le typage *)
 
 let%test_unit "code_testprintint" = 

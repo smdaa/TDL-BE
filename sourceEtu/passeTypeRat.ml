@@ -44,8 +44,12 @@ let rec analyse_type_expression e =
     let (tle, nle) = List.split (List.map analyse_type_expression le) in 
     begin
       match info_ast_to_info info with 
-      | InfoFun (_, typeRet, typeParams) ->
-        if (est_compatible_list tle typeParams) then (typeRet, AppelFonction(info, nle)) else raise (TypesParametresInattendus (tle, typeParams))
+      | InfoFun (_, t, ltp) ->
+        if not (List.mem tle ltp) then
+          (* aucune signature n'existe *)
+          raise (TypesParametresInattendus (tle, tle))
+        else
+          (t, AppelFonction (info, nle, tle))
       | _ -> failwith "internal error"
     end
   | AstTds.Rationnel (e1, e2) ->

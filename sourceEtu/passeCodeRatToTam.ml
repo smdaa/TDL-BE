@@ -54,12 +54,12 @@ let rec analyse_code_affectable a b =
 (* génerer le code tam d'une expression *)
 let rec analyse_code_expression e =
   match e with 
-  | AppelFonction (info, le) ->
+  | AppelFonction (info, le, tle) ->
     begin
       match info_ast_to_info info with 
       | InfoFun (n, _, _) -> 
         (List.fold_right (fun e acc -> (analyse_code_expression e) ^ acc) le "" ) ^ 
-        "CALL (SB) " ^ n ^ "\n"
+        "CALL (SB) " ^ n ^ (List.fold_right (fun h t -> (string_of_type h) ^ t) tle) "" ^ "\n"
       | _ -> failwith "internal error"
     end
   | Rationnel (e1, e2) -> (analyse_code_expression e1) ^
@@ -214,14 +214,20 @@ and analyse_code_li li = String.concat "" (List.map analyse_code_instruction li)
 (* analyse_code_fonction : AstType.fonction -> string*)
 (* Paramètre (AstPlacement.Fonction(info, _, li, e) : la fonction à analyser *)
 (* génerer le code tam d'une fonction *)
-let analyse_code_fonction (AstPlacement.Fonction(info, _, li, e)) = 
+let analyse_code_fonction (AstPlacement.Fonction(info, lp, li, e)) = 
+  let aux ia = 
+    match info_ast_to_info ia with 
+    | InfoVar (_, t, _, _) -> t
+    | _ -> failwith "internal error"
+  in
   match info_ast_to_info info with 
-  | InfoFun(non, typeRet, typeParams) -> 
+  | InfoFun(non, typeRet, _) -> 
+    let ltp = List.map aux lp in
     let taille_variables_locales = List.fold_right (fun i ti -> (taille_variables_declarees i) + ti) li 0 in 
     let taille_return = getTaille typeRet in
-    let taille_parametres = List.fold_right (fun i ti -> ti + (getTaille i) ) typeParams 0  in
+    let taille_parametres = List.fold_right (+) (List.map getTaille ltp) 0 in
     let nli = (analyse_code_li li) in
-    non ^ "\n" ^
+    non ^ (List.fold_right (fun h t -> (string_of_type h) ^ t) ltp "") ^ "\n" ^
     nli ^
     (analyse_code_expression e) ^
     "POP (" ^ (string_of_int taille_return) ^ ") " ^ (string_of_int taille_variables_locales) ^ "\n" ^

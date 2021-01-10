@@ -344,6 +344,16 @@ let%test_unit "testcase4" =
   with
     | IdentifiantNonDeclare("Lundi") -> ()
 
+let%test_unit "testsurcharge1" = 
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurcharge1.rat" in ()
+
+let%test_unit "testsurcharge2" = 
+  try
+    let _ = compiler "../../fichiersRat/src-rat-tds-test/testSurcharge2.rat" 
+    in raise ErreurNonDetectee
+  with
+    | DoubleDeclaration("f") -> ()
+
 (* Fichiers de tests de la génération de code -> doivent passer la TDS *)
 
 let%test_unit "code_testprintint" = 

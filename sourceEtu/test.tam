@@ -1,4 +1,4 @@
-; fichiersRat/src-rat-tam-test/case2.rat
+; fichiersRat/src-rat-tam-test/testUltime.rat
 JUMP main
 
 pgcd
@@ -70,74 +70,907 @@ SUBR IMul
 CALL (ST) norm
 RETURN (2) 4
 
-
-main
-
+getIntEnumerationdeMois
 PUSH 1
-LOADL 2
-STORE (1) 0[SB]
+LOADL 0
+STORE (1) 3[LB]
+LOAD (1) -1[LB]
 LOAD (1) 0[SB]
+SUBR IEq
+JUMPIF (0) label3
+label103
 LOADL 1
-SUBR IEq
-JUMPIF (0) label2
-LOADL 42
-SUBR IOut
-POP (0) 0
-JUMP label3
-label2
-LOAD (1) 0[SB]
-LOADL 2
-SUBR IEq
-JUMPIF (0) label4
-label5
-LOADL 78
-SUBR IOut
+STORE (1) 3[LB]
 POP (0) 0
 JUMP label1
-label4
-LOAD (1) 0[SB]
+label104
+LOADL 2
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label105
 LOADL 3
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label106
+LOADL 4
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label107
+LOADL 5
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label108
+LOADL 6
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label109
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label110
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label111
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label112
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label113
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+label114
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label1
+
+JUMP label2
+label3
+LOAD (1) -1[LB]
+LOAD (1) 1[SB]
 SUBR IEq
 JUMPIF (0) label6
-label7
-PUSH 1
+label92
+LOADL 2
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label93
 LOADL 3
-STORE (1) 1[SB]
-LOAD (1) 1[SB]
-SUBR IOut
-POP (0) 1
-JUMP label1
-label6
-LOAD (1) 0[SB]
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label94
 LOADL 4
-SUBR IEq
-JUMPIF (0) label8
-label9
-PUSH 1
-LOADL 3
-STORE (1) 1[SB]
-LOAD (1) 1[SB]
-LOAD (1) 0[SB]
-SUBR IAdd
-SUBR IOut
-POP (0) 1
-JUMP label1
-label8
-LOAD (1) 0[SB]
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label95
 LOADL 5
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label96
+LOADL 6
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label97
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label98
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label99
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label100
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label101
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+label102
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label4
+
+JUMP label5
+label6
+LOAD (1) -1[LB]
+LOAD (1) 2[SB]
 SUBR IEq
-JUMPIF (0) label10
-LOADL 20
-SUBR IOut
+JUMPIF (0) label9
+label82
+LOADL 3
+STORE (1) 3[LB]
 POP (0) 0
+JUMP label7
+label83
+LOADL 4
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label84
+LOADL 5
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label85
+LOADL 6
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label86
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label87
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label88
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label89
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label90
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+label91
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label7
+
+JUMP label8
+label9
+LOAD (1) -1[LB]
+LOAD (1) 3[SB]
+SUBR IEq
+JUMPIF (0) label12
+label73
+LOADL 4
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label74
+LOADL 5
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label75
+LOADL 6
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label76
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label77
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label78
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label79
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label80
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+label81
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label10
+
 JUMP label11
-label10
-LOADL 96
-SUBR IOut
+label12
+LOAD (1) -1[LB]
+LOAD (1) 4[SB]
+SUBR IEq
+JUMPIF (0) label15
+label65
+LOADL 5
+STORE (1) 3[LB]
 POP (0) 0
-JUMP label1
+JUMP label13
+label66
+LOADL 6
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+label67
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+label68
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+label69
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+label70
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+label71
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+label72
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label13
+
+JUMP label14
+label15
+LOAD (1) -1[LB]
+LOAD (1) 5[SB]
+SUBR IEq
+JUMPIF (0) label18
+label58
+LOADL 6
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+label59
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+label60
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+label61
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+label62
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+label63
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+label64
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label16
+
+JUMP label17
+label18
+LOAD (1) -1[LB]
+LOAD (1) 6[SB]
+SUBR IEq
+JUMPIF (0) label21
+label52
+LOADL 7
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label19
+label53
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label19
+label54
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label19
+label55
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label19
+label56
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label19
+label57
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label19
+
+JUMP label20
+label21
+LOAD (1) -1[LB]
+LOAD (1) 7[SB]
+SUBR IEq
+JUMPIF (0) label24
+label47
+LOADL 8
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label22
+label48
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label22
+label49
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label22
+label50
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label22
+label51
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label22
+
+JUMP label23
+label24
+LOAD (1) -1[LB]
+LOAD (1) 8[SB]
+SUBR IEq
+JUMPIF (0) label27
+label43
+LOADL 9
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label25
+label44
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label25
+label45
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label25
+label46
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label25
+
+JUMP label26
+label27
+LOAD (1) -1[LB]
+LOAD (1) 9[SB]
+SUBR IEq
+JUMPIF (0) label30
+label40
+LOADL 10
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label28
+label41
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label28
+label42
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label28
+
+JUMP label29
+label30
+LOAD (1) -1[LB]
+LOAD (1) 10[SB]
+SUBR IEq
+JUMPIF (0) label33
+label38
+LOADL 11
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label31
+label39
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label31
+
+JUMP label32
+label33
+LOAD (1) -1[LB]
+LOAD (1) 11[SB]
+SUBR IEq
+JUMPIF (0) label36
+label37
+LOADL 12
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label34
+
+JUMP label35
+label36
+
+label35
+
+label34
+label32
+
+label31
+label29
+
+label28
+label26
+
+label25
+label23
+
+label22
+label20
+
+label19
+label17
+
+label16
+label14
+
+label13
+label11
+
+label10
+label8
+
+label7
+label5
+
+label4
+label2
 
 label1
-POP (0) 1
+LOAD (1) 3[LB]
+POP (1) 1
+RETURN (1 )1
+compareIntInt
+PUSH 1
+LOAD (1) 14[SB]
+STORE (1) 3[LB]
+LOAD (1) -2[LB]
+LOAD (1) -1[LB]
+SUBR ILss
+JUMPIF (0) label115
+LOAD (1) 12[SB]
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label116
+label115
+LOAD (1) -2[LB]
+LOAD (1) -1[LB]
+SUBR IEq
+JUMPIF (0) label117
+LOAD (1) 13[SB]
+STORE (1) 3[LB]
+POP (0) 0
+JUMP label118
+label117
+LOAD (1) 14[SB]
+STORE (1) 3[LB]
+POP (0) 0
+label118
+POP (0) 0
+label116
+LOAD (1) 3[LB]
+POP (1) 1
+RETURN (1 )2
+compareEnumerationdeMoisEnumerationdeMois
+LOAD (1) -2[LB]
+CALL (SB) getIntEnumerationdeMois
+LOAD (1) -1[LB]
+CALL (SB) getIntEnumerationdeMois
+CALL (SB) compareIntInt
+POP (1) 0
+RETURN (1 )2
+permutePointeur sur IntPointeur sur Int
+PUSH 1
+LOAD (1) -2[LB]
+LOADI (1)
+STORE (1) 3[LB]
+LOAD (1) -1[LB]
+LOADI (1)
+LOAD (1) -2[LB]
+STOREI (1)
+LOAD (1) 3[LB]
+LOAD (1) -1[LB]
+STOREI (1)
+LOADL 0
+POP (1) 1
+RETURN (1 )2
+permutePointeur sur EnumerationdeMoisPointeur sur EnumerationdeMois
+PUSH 1
+LOAD (1) -2[LB]
+LOADI (1)
+STORE (1) 3[LB]
+LOAD (1) -1[LB]
+LOADI (1)
+LOAD (1) -2[LB]
+STOREI (1)
+LOAD (1) 3[LB]
+LOAD (1) -1[LB]
+STOREI (1)
+LOADL 0
+POP (1) 1
+RETURN (1 )2
+ordonnePointeur sur IntPointeur sur EnumerationdeMoisPointeur sur IntPointeur sur EnumerationdeMois
+PUSH 1
+LOADL 0
+STORE (1) 3[LB]
+LOAD (1) -3[LB]
+LOADI (1)
+LOAD (1) -1[LB]
+LOADI (1)
+CALL (SB) compareEnumerationdeMoisEnumerationdeMois
+LOAD (1) 14[SB]
+SUBR IEq
+JUMPIF (0) label121
+label139
+PUSH 1
+LOAD (1) -4[LB]
+LOAD (1) -2[LB]
+CALL (SB) permutePointeur sur IntPointeur sur Int
+STORE (1) 4[LB]
+PUSH 1
+LOAD (1) -3[LB]
+LOAD (1) -1[LB]
+CALL (SB) permutePointeur sur EnumerationdeMoisPointeur sur EnumerationdeMois
+STORE (1) 5[LB]
+LOADL 1
+STORE (1) 3[LB]
+POP (0) 2
+JUMP label119
+label140
+LOAD (1) -4[LB]
+LOADI (1)
+LOAD (1) -2[LB]
+LOADI (1)
+CALL (SB) compareIntInt
+LOAD (1) 14[SB]
+SUBR IEq
+JUMPIF (0) label143
+label147
+PUSH 1
+LOAD (1) -4[LB]
+LOAD (1) -2[LB]
+CALL (SB) permutePointeur sur IntPointeur sur Int
+STORE (1) 4[LB]
+PUSH 1
+LOAD (1) -3[LB]
+LOAD (1) -1[LB]
+CALL (SB) permutePointeur sur EnumerationdeMoisPointeur sur EnumerationdeMois
+STORE (1) 5[LB]
+LOADL 1
+STORE (1) 3[LB]
+POP (0) 2
+JUMP label141
+label148
+POP (0) 0
+JUMP label141
+
+JUMP label142
+label143
+POP (0) 0
+
+label144
+label142
+
+label141
+POP (0) 0
+JUMP label119
+label149
+POP (0) 0
+JUMP label119
+
+JUMP label120
+label121
+LOAD (1) -3[LB]
+LOADI (1)
+LOAD (1) -1[LB]
+LOADI (1)
+CALL (SB) compareEnumerationdeMoisEnumerationdeMois
+LOAD (1) 13[SB]
+SUBR IEq
+JUMPIF (0) label124
+label129
+LOAD (1) -4[LB]
+LOADI (1)
+LOAD (1) -2[LB]
+LOADI (1)
+CALL (SB) compareIntInt
+LOAD (1) 14[SB]
+SUBR IEq
+JUMPIF (0) label132
+label136
+PUSH 1
+LOAD (1) -4[LB]
+LOAD (1) -2[LB]
+CALL (SB) permutePointeur sur IntPointeur sur Int
+STORE (1) 4[LB]
+PUSH 1
+LOAD (1) -3[LB]
+LOAD (1) -1[LB]
+CALL (SB) permutePointeur sur EnumerationdeMoisPointeur sur EnumerationdeMois
+STORE (1) 5[LB]
+LOADL 1
+STORE (1) 3[LB]
+POP (0) 2
+JUMP label130
+label137
+POP (0) 0
+JUMP label130
+
+JUMP label131
+label132
+POP (0) 0
+
+label133
+label131
+
+label130
+POP (0) 0
+JUMP label122
+label138
+POP (0) 0
+JUMP label122
+
+JUMP label123
+label124
+LOAD (1) -3[LB]
+LOADI (1)
+LOAD (1) -1[LB]
+LOADI (1)
+CALL (SB) compareEnumerationdeMoisEnumerationdeMois
+LOAD (1) 12[SB]
+SUBR IEq
+JUMPIF (0) label127
+label128
+POP (0) 0
+JUMP label125
+
+JUMP label126
+label127
+
+label126
+
+label125
+label123
+
+label122
+label120
+
+label119
+LOAD (1) 3[LB]
+POP (1) 1
+RETURN (1 )4
+printDateIntEnumerationdeMois
+LOAD (1) -2[LB]
+LOAD (1) -1[LB]
+CALL (SB) getIntEnumerationdeMois
+CALL (SB) ROut
+LOADL 0
+POP (1) 0
+RETURN (1 )2
+
+main
+PUSH 1
+LOADL 0
+STORE (1) 0[SB]
+PUSH 1
+LOADL 1
+STORE (1) 1[SB]
+PUSH 1
+LOADL 2
+STORE (1) 2[SB]
+PUSH 1
+LOADL 3
+STORE (1) 3[SB]
+PUSH 1
+LOADL 4
+STORE (1) 4[SB]
+PUSH 1
+LOADL 5
+STORE (1) 5[SB]
+PUSH 1
+LOADL 6
+STORE (1) 6[SB]
+PUSH 1
+LOADL 7
+STORE (1) 7[SB]
+PUSH 1
+LOADL 8
+STORE (1) 8[SB]
+PUSH 1
+LOADL 9
+STORE (1) 9[SB]
+PUSH 1
+LOADL 10
+STORE (1) 10[SB]
+PUSH 1
+LOADL 11
+STORE (1) 11[SB]
+PUSH 1
+LOADL 12
+STORE (1) 12[SB]
+PUSH 1
+LOADL 13
+STORE (1) 13[SB]
+PUSH 1
+LOADL 14
+STORE (1) 14[SB]
+
+PUSH 1
+LOADL 1
+SUBR MAlloc
+STORE (1) 15[SB]
+PUSH 1
+LOADL 1
+SUBR MAlloc
+STORE (1) 16[SB]
+PUSH 1
+LOADL 1
+SUBR MAlloc
+STORE (1) 17[SB]
+PUSH 1
+LOADL 1
+SUBR MAlloc
+STORE (1) 18[SB]
+LOADL 15
+LOAD (1) 15[SB]
+STOREI (1)
+LOAD (1) 0[SB]
+LOAD (1) 17[SB]
+STOREI (1)
+LOADL 8
+LOAD (1) 16[SB]
+STOREI (1)
+LOAD (1) 11[SB]
+LOAD (1) 18[SB]
+STOREI (1)
+PUSH 1
+LOAD (1) 15[SB]
+LOAD (1) 17[SB]
+LOAD (1) 16[SB]
+LOAD (1) 18[SB]
+CALL (SB) ordonnePointeur sur IntPointeur sur EnumerationdeMoisPointeur sur IntPointeur sur EnumerationdeMois
+STORE (1) 19[SB]
+PUSH 1
+LOAD (1) 15[SB]
+LOADI (1)
+LOAD (1) 17[SB]
+LOADI (1)
+CALL (SB) printDateIntEnumerationdeMois
+STORE (1) 20[SB]
+LOAD (1) 16[SB]
+LOADI (1)
+LOAD (1) 18[SB]
+LOADI (1)
+CALL (SB) printDateIntEnumerationdeMois
+STORE (1) 20[SB]
+LOADL 15
+LOAD (1) 15[SB]
+STOREI (1)
+LOAD (1) 0[SB]
+LOAD (1) 17[SB]
+STOREI (1)
+LOADL 8
+LOAD (1) 16[SB]
+STOREI (1)
+LOAD (1) 0[SB]
+LOAD (1) 18[SB]
+STOREI (1)
+LOAD (1) 15[SB]
+LOAD (1) 17[SB]
+LOAD (1) 16[SB]
+LOAD (1) 18[SB]
+CALL (SB) ordonnePointeur sur IntPointeur sur EnumerationdeMoisPointeur sur IntPointeur sur EnumerationdeMois
+STORE (1) 19[SB]
+LOAD (1) 15[SB]
+LOADI (1)
+LOAD (1) 17[SB]
+LOADI (1)
+CALL (SB) printDateIntEnumerationdeMois
+STORE (1) 20[SB]
+LOAD (1) 16[SB]
+LOADI (1)
+LOAD (1) 18[SB]
+LOADI (1)
+CALL (SB) printDateIntEnumerationdeMois
+STORE (1) 20[SB]
+LOADL 15
+LOAD (1) 15[SB]
+STOREI (1)
+LOAD (1) 1[SB]
+LOAD (1) 17[SB]
+STOREI (1)
+LOADL 8
+LOAD (1) 16[SB]
+STOREI (1)
+LOAD (1) 0[SB]
+LOAD (1) 18[SB]
+STOREI (1)
+LOAD (1) 15[SB]
+LOAD (1) 17[SB]
+LOAD (1) 16[SB]
+LOAD (1) 18[SB]
+CALL (SB) ordonnePointeur sur IntPointeur sur EnumerationdeMoisPointeur sur IntPointeur sur EnumerationdeMois
+STORE (1) 19[SB]
+LOAD (1) 15[SB]
+LOADI (1)
+LOAD (1) 17[SB]
+LOADI (1)
+CALL (SB) printDateIntEnumerationdeMois
+STORE (1) 20[SB]
+LOAD (1) 16[SB]
+LOADI (1)
+LOAD (1) 18[SB]
+LOADI (1)
+CALL (SB) printDateIntEnumerationdeMois
+STORE (1) 20[SB]
+POP (0) 6
 
 HALT

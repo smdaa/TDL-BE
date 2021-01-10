@@ -212,20 +212,46 @@ and analyse_tds_bloc tds li =
 en une fonction de type AstTds.fonction *)
 (* Erreur si mauvaise utilisation des identifiants *)
 let analyse_tds_fonction maintds (AstSyntax.Fonction(t,n,lp,li,e))  =
+  (* analyser un parametre *)
   let aux tds (t, n) = 
-    match chercherGlobalement tds n with 
+    match chercherLocalement tds n with 
     | Some _ -> raise (DoubleDeclaration n)
     | None -> 
       let info = info_to_info_ast (InfoVar(n, t, 0, "")) in ajouter tds n info;
       (t, info)
-    in
+  in
   match chercherGlobalement maintds n with 
-  | Some _ -> raise (DoubleDeclaration n)
+  | Some info -> 
+    begin
+      match info_ast_to_info info with 
+      | InfoFun _ ->
+        let lpt = fst (List.split lp) in
+        (* chercher la signature de la fonction *)
+        begin
+          match info_ast_to_info info with 
+          | InfoFun (n, t, ltp) -> if not (List.mem lpt ltp) then 
+            (* la signature n'existe pas deja  *)
+            let tdslocal = creerTDSFille maintds in
+            ajouter maintds n info;
+            ajouter tdslocal n info;
+            let nlp = List.map (aux tdslocal) lp in
+            let nli = List.map (analyse_tds_instruction tdslocal) li in
+            let ne = analyse_tds_expression tdslocal e in
+            ajouter_signature lpt info;
+            Fonction (t, info, nlp, nli, ne)
+            (* la signature existe déja  *)
+            else raise (DoubleDeclaration n)
+          | _ -> failwith "internal error"
+        end
+      | _ -> failwith "internal error"
+    end
   | None ->
-    let info = info_to_info_ast (InfoFun(n, t, List.map fst lp)) in ajouter maintds n info;
     let tdslocal = creerTDSFille maintds in
-    let nlp = List.map (fun (t, n) -> aux tdslocal (t, n)) lp in
-    let nli = List.map (fun i -> analyse_tds_instruction tdslocal i) li in
+    let info = info_to_info_ast (InfoFun(n, t, [fst (List.split lp)])) 
+    in ajouter maintds n info;
+    ajouter tdslocal n info;
+    let nlp = List.map (aux tdslocal) lp in
+    let nli = List.map (analyse_tds_instruction tdslocal) li in
     let ne = analyse_tds_expression tdslocal e in
     Fonction (t, info, nlp, nli, ne)
   
