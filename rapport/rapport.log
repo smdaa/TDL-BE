@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.27)  13 JAN 2021 15:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.10) (preloaded format=pdflatex 2020.10.27)  13 JAN 2021 18:21
 entering extended mode
 **c:/Users/MDAA/Documents/TDL-BE/rapport/rapport.tex
 (c:/Users/MDAA/Documents/TDL-BE/rapport/rapport.tex
@@ -181,15 +181,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 215--223
 
 [6] [7] (c:/Users\MDAA\Documents\TDL-BE\rapport\rapport.aux) ) 
 Here is how much of TeX's memory you used:
- 1894 strings out of 480236
- 29181 string characters out of 2881032
+ 1895 strings out of 480236
+ 29189 string characters out of 2881032
  313833 words of memory out of 3000000
- 18454 multiletter control sequences out of 15000+200000
+ 18455 multiletter control sequences out of 15000+200000
  540153 words of font info for 46 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,6n,66p,276b,267s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 60i,6n,66p,278b,267s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\MDAA\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/MDAA/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on c:/Users\MDAA\Documents\TDL-BE\rapport\rapport.pdf (7 pages, 138147 bytes).
+Output written on c:/Users\MDAA\Documents\TDL-BE\rapport\rapport.pdf (7 pages, 138350 bytes).
 PDF statistics:
  65 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

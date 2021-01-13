@@ -29,15 +29,15 @@
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-Le but de ce projet est de ajouter les extensions du language Rat  réalisé en TP de traduction des langages en Ocaml afin de traiter les nouvelles 
-constructions 
+Le but de ce projet est d'ajouter les extensions du language Rat  réalisées en TP de traduction des langages en Ocaml afin de traiter les nouvelles constructions
 \begin{itemize}
     \item pointeurs
     \item surcharge des fonctions
     \item types énumérés
     \item switch/case
 \end{itemize}
-Dans la suite du rapport on va aborder les changements sur la structure du compilateur fin de tp : les changements sur l'ast,tds et les différentes passe. 
+Dans la suite du rapport on va aborder les changements sur la structure du compilateur fin de Tp : les changements sur l'ast, la tds, Les différents types
+ et les différentes passes.
 \section{Pointeurs}
 \subsection{Modifications de la grammaire}
 On a ajoute les règles suivantes :
@@ -52,12 +52,12 @@ On a ajoute les règles suivantes :
     \item I $\rightarrow$ A = E
 \end{itemize}
 \subsection{Modifications de l'Ast}
-- Afin de traiter les pointeurs et conformément au dernier tp, on a ajouté un nouveau type \textbf{affectable} à l'ast qui peut être un identifiant qui permet l'accès 
-a une variable ou une valeur qui permet l'accès a la valeur pointé par un pointeur. \\
-- On a ajouté un nouveau type dans \textbf{type.ml} : \textbf{Pointeur of typ}: un pointeur sur null a un type de Pointeur(Undefined), et deux variable de type 
-$Pointeur (t_1)$ et $Pointeur (t_2)$ sont compatible si $t_1$ et $t_2$ sont compatible. \\
-- Lors de la \textbf{passeCodeRatToTam} et pour l'analyse d'un affectable on a choisi de factoriser l'operation LOAD et STORE dans une unique fonction en 
-ajoutant un deuxième paramètre de type boolean qui va indiquer si on veut effectuer un LOAD ou un STORE. \\ 
+- Afin de traiter les pointeurs et conformément au dernier tp, on a ajouté un nouveau type \textbf{affectable} à l'ast qui peut être un identifiant qui permet 
+l'accès à une variable ou une valeur qui permet l'accès à la valeur pointé par un pointeur. \\
+- On a ajouté un nouveau type dans \textbf{type.ml} : \textbf{Pointeur of typ}: un pointeur sur null a un type de Pointeur(Undefined), et deux variables de type 
+$Pointeur (t_1)$ et $Pointeur (t_2)$ sont compatibles si $t_1$ et $t_2$ sont compatibles. \\
+- Lors de la \textbf{passeCodeRatToTam} et pour l'analyse d'un affectable on a choisi de factoriser l'opération LOAD et STORE dans une unique fonction en 
+ajoutant un deuxième paramètre du type boolean qui va indiquer si on veut effectuer un LOAD ou un STORE. \\ 
 \subsection{Jugement de typage}
 \begin{equation}
     \frac{\sigma \vdash a : Pointeur(\tau)}{\sigma \vdash * a : \tau}
@@ -73,15 +73,15 @@ ajoutant un deuxième paramètre de type boolean qui va indiquer si on veut effe
 \end{equation}
 \section{Surcharge des fonctions}
 \subsection{Modifications de la TDS}
-- Afin de traiter la surcharge des fonction (types des arguments) On a modifié la liste des types d'un \textbf{InfoFun} par une liste des listes des types 
-pour prendre en compte les différentes signature qu'une fonction peut prendre, et on a défini une fonction $ajouter\_signature$ qui permet d'ajouter une signature 
-a une fonction qui existe dans la tds.
+- Afin de traiter la surcharge des fonctions (types des arguments) On a modifié la liste des types d'un \textbf{InfoFun} par une liste des listes des types 
+pour prendre en compte les différentes signatures qu'une fonction peut prendre, et on a défini une fonction $ajouter\_signature$ qui permet d'ajouter une signature 
+à une fonction qui existe dans la tds.
 \subsection{Modifications de l'Ast}
 - Lors de la \textbf{passeTdsRat} pour analyser une fonction on cherche la signature dans la tds et si elle existe déjà on lève l'exception \textbf{DoubleDeclaration}
 ,sinon on ajoute la liste des types à la liste des listes des types. \\
 - Lors de la \textbf{passeTypeRat} pour analyser une expression de type \textbf{AppelFonction(info, le)} on cherche s'il existe une signature dans la tds
-compatible avec la liste des paramètre sinon on lève l'exception \textbf{TypesParametresInattendus}. \\
-- Lors de la \textbf{passeCodeRatToTam} afin de distinguer les différentes signature des fonctions lors du call on a choisi de concaténer le nom de la fonction avec ses 
+compatible avec la liste des paramètres sinon on lève l'exception \textbf{TypesParametresInattendus}. \\
+- Lors de la \textbf{passeCodeRatToTam} afin de distinguer les différentes signatures des fonctions lors du call on a choisi de concaténer le nom de la fonction avec ses 
 paramètres comme label\\
 exemple : 
 \begin{verbatim}
@@ -109,14 +109,14 @@ On ajoute les règles suivantes :
 - Afin de traiter les types énumérés, on a ajouté un nouveau type \textbf{enumeration} à l'ast qui est un couple de type de l'énumération et une liste des différentes
 valeurs. \\
 - le type programme devient un triplet (liste des énumérations, liste des fonctions, bloc). \\
-- On a ajouté un nouveau type dans \textbf{type.ml} : \textbf{Enum of string}: deux variable de type 
-$Enum (e_1)$ et $Enum (e_2)$ sont compatible si $e_1 = e_2$. \\
-- Lors de la \textbf{passeTdsRat} l'analyse d'un énumération est similaire à l'analyse d'une instruction de type Déclaration: On vérifie que le type 
-de l'énumération n'est pas déjà déclaré et que toutes valeurs sont déclarés une seule fois en les ajoutant dans la tds.\\
-- Lors de la \textbf{passePlacemmentRat} on place toutes les valeurs de type Enum \_ dans les premières addresses du stack et pour les variables du bloc on 
-commence a l'address qui correspond au nombre des valeurs de type Enum \_ . \\ 
-- Lors de la \textbf{passeCodeRatToTam} chaque valeur de type Enum \_ sera traité comme sa valeur d'address dans le stack puisque on l'unicité des addresses et lors de 
-la passe de typage on a éliminer les cas ou on fait des operations sur deux valeurs de type Enum \_ différentes. Donc l'opérateur binaire \textbf{EquEnum} qu'on a défini pour
+- On a ajouté un nouveau type dans \textbf{type.ml} : \textbf{Enum of string}: deux variables de type 
+$Enum (e_1)$ et $Enum (e_2)$ sont compatibles si $e_1 = e_2$. \\
+- Lors de la \textbf{passeTdsRat} l'analyse d'une énumération est similaire à l'analyse d'une instruction du type Déclaration: On vérifie que le type 
+de l'énumération n'est pas déjà déclaré et que toutes valeurs sont déclarées une seule fois en les ajoutant dans la tds.\\
+- Lors de la \textbf{passePlacemmentRat} on place toutes les valeurs du type Enum \_ dans les premières adresses du stack et pour les variables du bloc on 
+commence a l'address qui correspond au nombre des valeurs du type Enum \_ . \\ 
+- Lors de la \textbf{passeCodeRatToTam} chaque valeur du type Enum \_ sera traitée comme sa valeur d'address dans le stack puisque on l'unicité des addresses et lors de 
+la passe de typage on a éliminer les cas ou on fait des opérations sur deux valeurs du type Enum \_ différentes. Donc l'opérateur binaire \textbf{EquEnum} qu'on a défini pour
 traiter la surcharge du + sera analogue à \textbf{EquInt}
 \subsection{Jugement de typage}
 \begin{equation}
@@ -139,7 +139,7 @@ On ajoute les règles suivantes :
 \end{itemize}
 \subsection{Modifications de l'Ast}
 - Afin de traiter le switch case on a ajouté l'instruction $$Swicth(e:expression, (e:expression, b:bloc, i:instruction)list)$$ l'instruction i correspond
-a \textbf{Break} si on a un $break$ à la fin du bloc et a \textbf{Notbreak} sinon, de plus on ajouté l'expression \textbf{Default} de type Undefined qui correspond au dernier cas d'un switch.\\
+a \textbf{Break} si on a un $break$ à la fin du bloc et a \textbf{Notbreak} sinon, de plus on a ajouté l'expression \textbf{Default} de type Undefined qui correspond au dernier cas d'un switch.\\
 - Lors de la \textbf{passeTypeRat} on vérifie que chaque expression dans la liste a un type compatible avec le type de l'expression sur laquelle on fait le switch. \\
 - Exemple simple de génération de code :
 \begin{verbatim}
@@ -209,15 +209,15 @@ il suffit d'exécuter la commande suivant si c'est le cas
     dos2unix *.rat
 \end{verbatim}
 \subsection{Test d'integration}
-- On a défini des tests dans chaque dossier \textbf{src-rat-*-test} testant des différentes cas après l'implémentation de chaque extension du language Rat à
-l'instar des tests déjà fourni, et à la fin on a testé les quartes extensions sur l'exemple donnée dans le sujet \textbf{src-rat-tam-test/testUltime.rat}
+- On a défini des tests dans chaque dossier \textbf{src-rat-*-test} testant des différents cas après l'implémentation de chaque extension du language Rat à
+l'instar des tests déjà fourni, et à la fin on a testé les quartes extensions sur l'exemple donné dans le sujet \textbf{src-rat-tam-test/testUltime.rat}
 \section{Conclusion}
-- Les quartes extensions sont de difficulté variables : l'ajout du pointeur a été très détaillé lors du dernier tp donc ca avance vite, par contre 
-la difficulté principale dans le switch/case est dans la phase de génération code. L'ajout de la partie énumération nous a permit de bien comprendre
-la gestion du stack. Enfin l'ajout du surcharge des fonctions nous a permit de nous bien familiariser 
+- Les quartes extensions sont de difficulté variable : l'ajout du pointeur a été très détaillé lors du dernier Tp donc ça avance vite,
+ par contre la difficulté principale dans le switch/case est dans la phase de génération code. L'ajout de la partie énumération nous a permis de bien comprendre
+la gestion du stack. Enfin l'ajout de la surcharge des fonctions nous a permis de nous bien familiariser 
 avec la structure car il nécessite une bonne compréhension de l'architecture globale du projet. \\
-- Le code Tam généré passe les tests qu'on défini mais il est loin d'être optimale a cause du code mort surtout pour le switch/Case
-,mais la passe d'optimisation n'est pas inclue dans l'UE  \\  
-- En guise de conclusion ce projet est vachement intéressant : il nous a permit de nous familiariser avec les mécanisme d'un compilateur
-en pratiquant les notions de la programmation fonctionnel en Ocaml toute en jouant avec structures de donnée complexe. \\
+- Le code Tam généré passe les tests qu'on définit mais il est loin d'être optimale à cause du code mort 
+surtout pour le switch/Case, mais la passe d'optimisation n'est pas incluse dans l'UE  \\  
+- En guise de conclusion ce projet est vachement intéressant : il nous a permis de nous familiariser avec les mécanismes d'un compilateur en pratiquant les notions de 
+la programmation fonctionnelle en Ocaml toute en jouant avec structures de données complexes. \\
 \end{document}
