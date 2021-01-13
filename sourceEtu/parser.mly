@@ -147,6 +147,6 @@ cp :
 | e1=e le=cp    {e1::le}
 
 a:
-| MULT n=a      {Valeur (n)}
+| PO MULT n=a PF     {Valeur (n)}
 | n=ID               {Ident n}
 

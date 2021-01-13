@@ -5,7 +5,7 @@ open Type
 type info =
   | InfoConst of string * int
   | InfoVar of string * typ * int * string
-  | InfoFun of string * typ * typ list
+  | InfoFun of string * typ * (typ list) list 
 
 (* Données stockées dans la tds  et dans les AST : pointeur sur une information *)
 type info_ast = info ref  
@@ -49,7 +49,7 @@ let string_of_info info =
   match info with
   | InfoConst (n,value) -> "Constante "^n^" : "^(string_of_int value)
   | InfoVar (n,t,dep,base) -> "Variable "^n^" : "^(string_of_type t)^" "^(string_of_int dep)^"["^base^"]"
-  | InfoFun (n,t,tp) -> "Fonction "^n^" : "^(List.fold_right (fun elt tq -> if tq = "" then (string_of_type elt) else (string_of_type elt)^" * "^tq) tp "" )^
+  | InfoFun (n,t,tp) -> "Fonction "^n^" : "^(List.fold_right (fun elt tq -> if tq = "" then (string_of_type elt) else (string_of_type elt)^" * "^tq) (List.flatten tp) "" )^
                       " -> "^(string_of_type t)
 
 
@@ -76,10 +76,15 @@ let afficher_globale tds =
  
  let modifier_type_fonction_info t tp i =
        match !i with
-       |InfoFun(n,_,_) -> i:= InfoFun(n,t,tp)
+       |InfoFun(n,_,ltp) -> i:= InfoFun(n,t,tp::ltp)
        | _ -> failwith "Appel modifier_type_fonction_info pas sur un InfoFun"
  
  let modifier_adresse_info d b i =
      match !i with
      |InfoVar (n,t,_,_) -> i:= InfoVar (n,t,d,b)
      | _ -> failwith "Appel modifier_adresse_info pas sur un InfoVar"
+
+let ajouter_signature lt i =
+  match !i with 
+  | InfoFun(n, t, ltp) -> i:= InfoFun(n ,t, lt::ltp)
+  | _ -> failwith "Appel ajouter_signature pas sur un InfoFun"

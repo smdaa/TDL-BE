@@ -167,3 +167,11 @@ let%expect_test "case8" =
   runtam "../../fichiersRat/src-rat-tam-test/case8.rat";
   [%expect{| 19 |}]
 
+let%expect_test "surcharge1" = 
+  runtam "../../fichiersRat/src-rat-tam-test/testSurcharge1.rat";
+  [%expect{| 12 |}]
+
+let%expect_test "ultime" = 
+  runtam "../../fichiersRat/src-rat-tam-test/testUltime.rat";
+  [%expect{| [15/1][8/12][8/1][15/1][8/1][15/2] |}]
+
