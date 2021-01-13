@@ -6,6 +6,6 @@
 
 # - [x] La structure de controle switch/case
 
-# Rapport 
-TODO
+# - [x] Rapport 
+
 
